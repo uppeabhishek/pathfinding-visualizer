@@ -1,70 +1,116 @@
-import React, { FunctionComponent, SyntheticEvent } from "react";
+import React, { FunctionComponent, SyntheticEvent, useRef } from "react";
 import { useStyles } from "./styles";
 
-const Nodes: FunctionComponent<{height: number , width: number}> = ({height, width}) => {
+const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, width }) => {
     const classes = useStyles();
 
-    const trWidth = 30, trHeight = 30;
+    let trHeight = 30;
+    let trWidth = 30;
 
-    const rows = Math.floor(height/trHeight), cols = Math.floor(width/trWidth);
+    const rows = Math.floor(height / trHeight);
+    const cols = Math.floor(width / trWidth);
 
     function tdRowListener(e: SyntheticEvent<HTMLTableDataCellElement>) {
         const currentTargetClassList = e.currentTarget.classList;
         const classes = new Set(e.currentTarget.classList);
+
+        if (classes.has("source") || classes.has("destination")) {
+            return;
+        }
+
         if (classes.has("selected")) {
             currentTargetClassList.remove("selected");
-        }   
-        else {
+        } else {
             currentTargetClassList.add("selected");
         }
     }
 
-    function onMouseMove(e: SyntheticEvent<HTMLTableDataCellElement>) {
-        tdRowListener(e);
-    }
-
-    function onClick(e: SyntheticEvent<HTMLTableDataCellElement>) {
-        tdRowListener(e);
-    }
+    let shouldMouseEnter = false;
 
     function onMouseDown(e: SyntheticEvent<HTMLTableDataCellElement>) {
         tdRowListener(e);
-        console.log(e.currentTarget);
-        // e.currentTarget.addEventListener('onmousemove', () => {
-        //     console.log(e);
-        //     onMouseMove(e);
-        // });
+        shouldMouseEnter = true;
     }
 
-    const ColNodes: FunctionComponent<{row: number}> = ({row}) => {
+    function onMouseUp() {
+        shouldMouseEnter = false;
+    }
+
+    function onMouseEnter(e: SyntheticEvent<HTMLTableDataCellElement>) {
+        if (shouldMouseEnter) {
+            tdRowListener(e);
+        }
+    }
+
+    const borderRadius = 1;
+
+    trWidth -= borderRadius * 4;
+    trHeight -= borderRadius * 4;
+
+    const ColNodes: FunctionComponent<{ row: number }> = ({ row }) => {
         const res = [];
-        for (let i=0;i<cols; i++) {
+        const isMiddle = row === Math.floor(rows / 2);
+        const startNode = Math.floor(cols / 4);
+        const endNode = startNode * 3;
+
+        let className = "";
+        let text = "";
+
+        for (let i = 0; i < cols; i++) {
+            if (isMiddle) {
+                if (startNode === i) {
+                    className = "source";
+                    text = "S";
+                } else if (endNode === i) {
+                    className = "destination";
+                    text = "D";
+                } else {
+                    className = "";
+                    text = "";
+                }
+            }
             res.push(
-                <td 
-                    data-id={`${row}${i}`}
-                    onClick={tdRowListener}
-                    onMouseDown={onMouseDown}
+                <td
                     key={`${row}${i}`}
-                    style={{width: trWidth, height: trHeight}}
-                />
+                    className={className}
+                    data-id={`${row}${i}`}
+                    style={{
+                        width: trWidth,
+                        height: trHeight,
+                        border: `${borderRadius}px solid black`
+                    }}
+                    onMouseDown={onMouseDown}
+                    onMouseEnter={onMouseEnter}
+                    onMouseUp={onMouseUp}
+                >
+                    {text}
+                </td>
             );
         }
-        return <>{res}</>;
-    }
 
-    const RowNodes: FunctionComponent = () => {
-        const res = [];
-        for (let i=0; i< rows; i++) {
-            res.push(<tr key={i}>{<ColNodes row={i}/>}</tr>);
-        }
         return <>{res}</>;
     };
 
-    console.log(rows, cols);
+    const RowNodes: FunctionComponent = () => {
+        const res = [];
+
+        for (let i = 0; i < rows; i++) {
+            res.push(
+                <tr key={i}>
+                    <ColNodes row={i} />
+                </tr>
+            );
+        }
+
+        return <>{res}</>;
+    };
+
+    const bodyRef = useRef<HTMLTableSectionElement>(null);
+
     return (
         <table className={classes.table}>
-            <tbody>
-               <RowNodes /> 
+            <tbody ref={bodyRef}>
+                <RowNodes />
             </tbody>
         </table>
     );

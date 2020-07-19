@@ -6,17 +6,17 @@ const Graph: FunctionComponent = () => {
     const classes = useStyles();
     const graphRef = useRef<HTMLDivElement>(null);
 
-    const [heightWidth, setHeightWidth] = useState([0,0]);
+    const [heightWidth, setHeightWidth] = useState([0, 0]);
 
     useEffect(() => {
         if (graphRef.current) {
-            setHeightWidth([graphRef.current.clientHeight, graphRef.current.clientWidth])
+            setHeightWidth([graphRef.current.clientHeight, graphRef.current.clientWidth]);
         }
     }, []);
-    
+
     return (
-        <div className={classes.root} ref={graphRef}>
-            {heightWidth[0]>0 && <Nodes height={heightWidth[0]} width={heightWidth[1]} />}
+        <div ref={graphRef} className={classes.root}>
+            {heightWidth[0] > 0 && <Nodes height={heightWidth[0]} width={heightWidth[1]} />}
         </div>
     );
 };

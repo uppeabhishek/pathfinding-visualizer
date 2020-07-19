@@ -6,12 +6,21 @@ export const useStyles = makeStyles((theme) =>
             flex: 1
         },
         table: {
+            overflow: "hidden",
             borderSpacing: 0,
             "& td": {
-                border: "0.5px solid black"
+                textAlign: "center",
+                color: "white",
+                border: "1px solid black"
             },
             "& td.selected": {
-                backgroundColor: "#72d5ad"
+                backgroundColor: "#61dafb"
+            },
+            "& td.source": {
+                backgroundColor: "green"
+            },
+            "& td.destination": {
+                backgroundColor: "red"
             }
         }
     })

@@ -1,4 +1,4 @@
-import React, { ReactElement, useRef } from "react";
+import React, { ReactElement } from "react";
 import Header from "./components/header";
 import Graph from "./components/graph";
 import Info from "./components/Info";

@@ -3,7 +3,9 @@ import { createStyles, makeStyles } from "@material-ui/core";
 export const useStyles = makeStyles((theme) =>
     createStyles({
         header: {
-            padding: "10px"
+            padding: "10px",
+            maxWidth: "100%",
+            overflowX: "auto"
         },
         toolbar: {
             "& > *": {
