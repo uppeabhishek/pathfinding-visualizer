@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useRef } from "react";
 import Header from "./components/header";
 import Graph from "./components/graph";
 import Info from "./components/Info";
@@ -10,8 +10,10 @@ function App(): ReactElement {
     return (
         <div className={classes.root}>
             <Header />
-            <Info />
-            <Graph />
+            <div className={classes.main}>
+                <Info />
+                <Graph />
+            </div>
         </div>
     );
 }

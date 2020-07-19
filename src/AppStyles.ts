@@ -7,6 +7,12 @@ export const useStyles = makeStyles((theme) =>
             height: "100%",
             display: "flex",
             flexDirection: "column"
+        },
+        main: {
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            padding: "10px"
         }
     })
 );
