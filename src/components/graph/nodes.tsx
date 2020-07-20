@@ -77,7 +77,7 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
                     style={{
                         width: trWidth,
                         height: trHeight,
-                        border: `${borderRadius}px solid black`
+                        border: `${borderRadius}px solid blue`
                     }}
                     onMouseDown={onMouseDown}
                     onMouseEnter={onMouseEnter}
