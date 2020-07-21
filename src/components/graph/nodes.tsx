@@ -1,5 +1,8 @@
-import React, { FunctionComponent, SyntheticEvent, useRef } from "react";
+import React, { FunctionComponent, SyntheticEvent, useRef, useEffect, useMemo } from "react";
 import { useStyles } from "./styles";
+import { useSelector } from "react-redux";
+import { RootState } from "../../reducers";
+import RecursiveBackTracker from "../../MazeGenerationAlgorithms/RecursiveBacktracker";
 
 const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, width }) => {
     const classes = useStyles();
@@ -93,7 +96,6 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
 
     const RowNodes: FunctionComponent = () => {
         const res = [];
-
         for (let i = 0; i < rows; i++) {
             res.push(
                 <tr key={i}>
@@ -105,15 +107,28 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
         return <>{res}</>;
     };
 
+    const mazeType = useSelector((state: RootState) => state.globals.mazeType);
+
+    useEffect(() => {
+        if (bodyRef.current) {
+            if (mazeType === "recursiveBackTracker") {
+                const recursiveBacktracker = new RecursiveBackTracker(bodyRef.current, [0, 0]);
+                recursiveBacktracker.plotOnGraph();
+            }
+        }
+    }, [mazeType]);
+
     const bodyRef = useRef<HTMLTableSectionElement>(null);
 
-    return (
-        <table className={classes.table}>
-            <tbody ref={bodyRef}>
-                <RowNodes />
-            </tbody>
-        </table>
-    );
+    return useMemo(() => {
+        return (
+            <table className={classes.table}>
+                <tbody ref={bodyRef}>
+                    <RowNodes key={"constant"} />
+                </tbody>
+            </table>
+        )
+    }, [])
 };
 
 export default Nodes;

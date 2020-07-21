@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, ChangeEvent, useRef } from "react";
+import React, { FunctionComponent, ChangeEvent, useRef } from "react";
 import {
     Slider,
     AppBar,
@@ -10,18 +10,24 @@ import {
     Button
 } from "@material-ui/core";
 import { useStyles } from "./styles";
+import { changeAlgorithm, changeMazeType } from "../../actions";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../reducers";
 
 const Header: FunctionComponent = () => {
-    const [graphAlgorithm, toggleGraphAlgorithm] = useState("");
+
+    const dispatch = useDispatch();
+
+    const algorithm = useSelector((state: RootState) => state.globals.algorithm);
 
     const toggleGraphAlgorithmFunc = (event: ChangeEvent<{ value: unknown }>) => {
-        toggleGraphAlgorithm(event.target.value as string);
+        dispatch(changeAlgorithm(event.target.value as string));
     };
 
-    const [mazeGenerationAlgorithm, toggleMazeGenerationAlgorithm] = useState("");
+    const mazeType = useSelector((state: RootState) => state.globals.mazeType);
 
     const toggleMazeGenerationAlgorithmFunc = (event: ChangeEvent<{ value: unknown }>) => {
-        toggleMazeGenerationAlgorithm(event.target.value as string);
+        dispatch(changeMazeType(event.target.value as string));
     };
 
     const graphAlgorithms = useRef([
@@ -67,7 +73,7 @@ const Header: FunctionComponent = () => {
                         <Select
                             id="graphAlgorithms"
                             labelId="graphAlgorithmsLabel"
-                            value={graphAlgorithm}
+                            value={algorithm}
                             onChange={toggleGraphAlgorithmFunc}
                         >
                             {graphAlgorithms.current.map((algo) => (
@@ -85,7 +91,7 @@ const Header: FunctionComponent = () => {
                         <Select
                             id="mazeGenerationAlgorithms"
                             labelId="mazeGenerationAlgorithmsLabel"
-                            value={mazeGenerationAlgorithm}
+                            value={mazeType}
                             onChange={toggleMazeGenerationAlgorithmFunc}
                         >
                             {mazeGenerationAlgorithms.current.map((algo) => (
