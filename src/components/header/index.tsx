@@ -62,11 +62,11 @@ const Header: FunctionComponent = () => {
         <div>
             <AppBar className={classes.header} position="static">
                 <Toolbar className={classes.toolbar}>
-                    <Typography className="item title" variant="h4">
+                    <Typography className="cursor-pointer" variant="h4" onClick={() => window.location.reload()}>
                         Pathfinding Visualizer
                     </Typography>
 
-                    <div className="item graphAlgorithms">
+                    <div className="graphAlgorithms">
                         <InputLabel id="graphAlgorithmsLabel">
                             <Typography variant="h6">Algorithms</Typography>
                         </InputLabel>
@@ -84,7 +84,7 @@ const Header: FunctionComponent = () => {
                         </Select>
                     </div>
 
-                    <div className="item mazeGenerationAlgorithms">
+                    <div className="mazeGenerationAlgorithms">
                         <InputLabel id="mazeGenerationAlgorithmsLabel">
                             <Typography variant="h6">Mazes</Typography>
                         </InputLabel>
