@@ -1,3 +1,5 @@
+import { getRandom } from "../commonUtilities";
+
 export default class RecursiveBackTracker {
 
     private readonly array: HTMLTableSectionElement;
@@ -8,9 +10,6 @@ export default class RecursiveBackTracker {
         this.startIndex = startIndex
     }
 
-    getRandom(min: number, max: number) {
-        return Math.floor(Math.random() * (max-min+1)) + min;
-    }
 
     getRandomNeighbour(i: number, j: number, maxi: number, maxj: number, visited: Set<string>) {
         let neighbours: Array<any> = [];
@@ -42,7 +41,7 @@ export default class RecursiveBackTracker {
         if (!neighbours.length) {
             return -1;
         }
-        const randomIndex = this.getRandom(0, neighbours.length-1);
+        const randomIndex = getRandom(0, neighbours.length-1);
         return neighbours[randomIndex];
     }
     
