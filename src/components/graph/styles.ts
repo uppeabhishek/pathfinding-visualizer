@@ -25,19 +25,8 @@ export const useStyles = makeStyles((theme) =>
                 "&:hover": {
                     transform: "scale(1.5)"
                 },
+                border: "none !important",
                 backgroundColor: "#61dafb"
-            },
-            "& td.borderRightNone": {
-                borderRight: "none !important",
-            },
-            "& td.borderLeftNone": {
-                borderLeft: "none !important",
-            },
-            "& td.borderTopNone": {
-                borderTop: "none !important",
-            },
-            "& td.borderBottomNone": {
-                borderBottom: "none !important",
             },
             "& td.source": {
                 "&:hover": {
