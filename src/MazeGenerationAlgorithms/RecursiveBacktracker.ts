@@ -15,26 +15,26 @@ export default class RecursiveBackTracker {
     getRandomNeighbour(i: number, j: number, maxi: number, maxj: number, visited: Set<string>) {
         let neighbours: Array<any> = [];
 
-        if (i-1 > 0) {
-            const temp = [i-1, j], tempString = temp.toString();
+        if (i-2 > 0) {
+            const temp = [i-2, j], tempString = temp.toString();
             if (!visited.has(tempString)) {
                 neighbours.push(temp);
             }
         }
-        if (i+1 < maxi) {
-            const temp = [i+1, j], tempString = temp.toString();
+        if (i+2 < maxi) {
+            const temp = [i+2, j], tempString = temp.toString();
             if (!visited.has(tempString)) {
                 neighbours.push(temp);
             }
         }
-        if (j-1 > 0) {
-            const temp = [i, j-1], tempString = temp.toString();
+        if (j-2 > 0) {
+            const temp = [i, j-2], tempString = temp.toString();
             if (!visited.has(tempString)) {
                 neighbours.push(temp);
             }
         }
-        if (j+1 < maxj) {
-            const temp = [i, j+1], tempString = temp.toString();
+        if (j+2 < maxj) {
+            const temp = [i, j+2], tempString = temp.toString();
             if (!visited.has(tempString)) {
                 neighbours.push(temp);
             }
@@ -50,35 +50,40 @@ export default class RecursiveBackTracker {
              trNodes: any, trLength: number, tdLength: number) {
 
         if (randomNeighbour[1] > currentCell[1]) {
-            trNodes[currentCell[0]].children[currentCell[1]].classList.add("borderRightNone");
-
             if (currentCell[1]+1 < tdLength) {
-                trNodes[currentCell[0]].children[currentCell[1]+1].classList.add("borderLeftNone");
+                trNodes[currentCell[0]].children[currentCell[1]+1].classList.add("selected");
             }
         }
 
         else if (randomNeighbour[0] > currentCell[0]) {
-            trNodes[currentCell[0]].children[currentCell[1]].classList.add("borderBottomNone");
-
             if (currentCell[0]+1 < trLength) {
-                trNodes[currentCell[0]+1].children[currentCell[1]].classList.add("borderTopNone");
+                trNodes[currentCell[0]+1].children[currentCell[1]].classList.add("selected");
             }
         }
 
         else if(currentCell[1] > randomNeighbour[1]) {
-            trNodes[currentCell[0]].children[currentCell[1]].classList.add("borderLeftNone");
-
-            if (currentCell[1]-1 > 0) {
-                trNodes[currentCell[0]].children[currentCell[1]-1].classList.add("borderRightNone");
+            if (randomNeighbour[1]+1 < tdLength) {
+                trNodes[randomNeighbour[0]].children[randomNeighbour[1]+1].classList.add("selected");
             }
         }
 
         else if (currentCell[0] > randomNeighbour[0]) {
-            trNodes[currentCell[0]].children[currentCell[1]].classList.add("borderTopNone");
-
-            if (currentCell[0]-1 > 0) {
-                trNodes[currentCell[0]-1].children[currentCell[1]].classList.add("borderBottomNone");
+            if (randomNeighbour[0]+1 < trLength) {
+                trNodes[randomNeighbour[0]+1].children[randomNeighbour[1]].classList.add("selected");
             }
+        }
+    }
+
+    plotCorners(trNodes: any, trLength: number, tdLength: number) {
+        const min = tdLength > trLength ? trLength : tdLength;
+        for (let i=0; i<tdLength; i++) {
+            trNodes[0].children[i].classList.add("selected");
+            trNodes[trLength-1].children[i].classList.add("selected");
+        }
+
+        for (let i=0;i<trLength; i++) {
+            trNodes[i].children[0].classList.add("selected");
+            trNodes[i].children[tdLength-1].classList.add("selected");
         }
     }
 
@@ -89,24 +94,25 @@ export default class RecursiveBackTracker {
         
         const stack: Array<any> = [];
         const visited: Set<string> = new Set([]);
-        const walls: Set<string> = new Set([]);
 
         let i = this.startIndex[0], j = this.startIndex[1];
 
         let currentCell = [i, j];
 
+        this.plotCorners(trNodes, trLength, tdLength);
+
         visited.add(currentCell.toString());
 
         stack.push(currentCell);
-
-        let cnt = 0
+        
+        let isVisited = false;
         while (stack.length) {
             const temp = stack.pop();
-            cnt+=1;
             if (temp) {
                 currentCell = temp;
                 const randomNeighbour = this.getRandomNeighbour(currentCell[0], currentCell[1], trLength, tdLength, visited);
                 if (randomNeighbour !== -1) {
+                    isVisited = true;
                     stack.push(currentCell);
 
                     this.removeWalls(randomNeighbour, currentCell, trNodes, trLength, tdLength);
