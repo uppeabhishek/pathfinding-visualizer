@@ -3,6 +3,8 @@ import { useStyles } from "./styles";
 import { useSelector } from "react-redux";
 import { RootState } from "../../reducers";
 import RecursiveBackTracker from "../../MazeGenerationAlgorithms/RecursiveBacktracker";
+import RandomizedPrims from "../../MazeGenerationAlgorithms/RandomizedPrims";
+import RecursiveDivision from "../../MazeGenerationAlgorithms/RecursiveDivision";
 
 const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, width }) => {
     const classes = useStyles();
@@ -114,6 +116,14 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
             if (mazeType === "recursiveBackTracker") {
                 const recursiveBacktracker = new RecursiveBackTracker(bodyRef.current, [0, 0]);
                 recursiveBacktracker.plotOnGraph();
+            }
+            else if (mazeType === "randomizedPrims") {
+                const randomizedPrims = new RandomizedPrims(bodyRef.current, [0, 0]);
+                randomizedPrims.plotOnGraph();
+            }
+            else if (mazeType === "recursiveDivision") {
+                const recursiveDivision = new RecursiveDivision(bodyRef.current);
+                recursiveDivision.plotOnGraph();
             }
         }
     }, [mazeType]);

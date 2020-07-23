@@ -43,8 +43,8 @@ const Header: FunctionComponent = () => {
 
     const mazeGenerationAlgorithms = useRef([
         {
-            name: "Recursive Backtracker",
-            value: "recursiveBackTracker"
+            name: "Recursive Division",
+            value: "recursiveDivision"
         }
     ]);
 
