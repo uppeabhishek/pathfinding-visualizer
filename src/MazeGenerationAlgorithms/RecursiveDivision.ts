@@ -33,9 +33,7 @@ export default class RecursiveDivision {
         }
     }
 
-    divideGrid(res: Array<[number, number]>, x: number, y: number, width: number, height: number) {
-
-        console.log(width, height);
+    divideGrid(res: Array<[number, number]>, x: number, y: number, height: number, width: number) {
         
         if (width < 2 || height < 2) {
             return;
@@ -43,49 +41,38 @@ export default class RecursiveDivision {
 
         this.getOrientation(width, height);
 
-        let wallStartX = x + (this.isHorizontal ? 0 : getRandom(0, width/2 -1)); 
-        let wallStartY = y + (this.isHorizontal ? getRandom(0, height/2 -1) : 0);
-
-        const passageStartX = wallStartX + (this.isHorizontal ? getRandom(0, width-1): 0);
-        const passageStartY = wallStartY + (this.isHorizontal ? 0: getRandom(0, height-1));
+        let currentX = this.isHorizontal ? x + getRandom(0, height-1) : x;
+        let currentY = this.isHorizontal ? y : y + getRandom(0, width-1);
 
         const length = this.isHorizontal ? width : height;
 
+        const passageX = this.isHorizontal ? currentX : currentX + getRandom(0, height-1);
+        const passageY = this.isHorizontal ? currentY + getRandom(0, width-1) : currentY;
 
-        for (let i =0; i < length; i++){
-            
-            if (!(wallStartX===passageStartX && wallStartY===passageStartY)) {
-                console.log(wallStartX, wallStartY);
-                if (wallStartX > 0 && wallStartX < this.maxRow && wallStartY > 0 && wallStartY < this.maxCol) {
-                    res[wallStartX][wallStartY] = 1;
-                }
+
+        for (let i=0; i < length; i++) {
+            if (!(currentX === passageX && currentY === passageY)) {
+                res[currentX][currentY] = 1;
             }
-
             if (this.isHorizontal) {
-                wallStartX+=1;
+                currentY+=1;
             }
-            else {
-                wallStartY+=1;
+            else{
+                currentX+=1;
             }
         }
 
-        // Left Part if vertical
-        // Top Part if horizontal
         let tempX = x;
         let tempY = y;
-        let tempWidth = this.isHorizontal ? width :  wallStartX - width + 1;
-        let tempHeight = this.isHorizontal ? wallStartY - y + 1 : height;
+        let tempHeight = this.isHorizontal ? currentX - x: height;
+        let tempWidth = this.isHorizontal ? width : currentY - y;
 
-        this.divideGrid(res, tempX, tempY, tempWidth, tempHeight);
+        console.log(tempX, tempY, tempHeight, tempWidth);
 
-        // Right Part if vertical
-        // Bottom Part if horizontal
-        tempX = this.isHorizontal ? x : wallStartX + 1;
-        tempY = this.isHorizontal ? wallStartY + 1: y;
-        tempWidth = this.isHorizontal ? width :  width - wallStartX + 1;
-        tempHeight = this.isHorizontal ? height - wallStartY + 1 : height;
+        this.divideGrid(res, tempX, tempY, tempHeight, tempWidth);
 
-        this.divideGrid(res, tempX, tempY, tempWidth, tempHeight);
+        console.log(res);
+
     }
 
     plotOnGraph() {
@@ -95,6 +82,12 @@ export default class RecursiveDivision {
             arr[i] = new Array(this.maxCol).fill(0);
         }
         this.divideGrid(arr, 0, 0, this.maxRow, this.maxCol);
-        console.log(arr);
+        for (let i=0;i<this.maxRow; i++) {
+            for (let j=0;j<this.maxCol;j++){
+                if (arr[i][j] === 1) {
+                    this.trNodes[i].children[j].classList.add("selected");
+                }
+            }
+        }
     }
 }
