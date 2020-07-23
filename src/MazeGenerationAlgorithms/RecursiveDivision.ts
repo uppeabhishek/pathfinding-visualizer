@@ -52,7 +52,12 @@ export default class RecursiveDivision {
 
         for (let i=0; i < length; i++) {
             if (!(currentX === passageX && currentY === passageY)) {
-                res[currentX][currentY] = 1;
+                try{
+                    res[currentX][currentY] = 1;
+                }
+                catch(e){
+                    console.log(currentX, currentY);
+                }
             }
             if (this.isHorizontal) {
                 currentY+=1;
@@ -62,17 +67,46 @@ export default class RecursiveDivision {
             }
         }
 
-        let tempX = x;
-        let tempY = y;
-        let tempHeight = this.isHorizontal ? currentX - x: height;
-        let tempWidth = this.isHorizontal ? width : currentY - y;
 
-        console.log(tempX, tempY, tempHeight, tempWidth);
+        if (this.isHorizontal) {
+            let tempX = x;
+            let tempY = y;
+            let tempHeight = this.isHorizontal ? currentX - x: height;
+            let tempWidth = this.isHorizontal ? width : currentY - y;
 
-        this.divideGrid(res, tempX, tempY, tempHeight, tempWidth);
+            // console.log(x, y, currentX, currentY, width, height);
 
-        console.log(res);
+            // console.log(x, y, currentY, currentX-y);
+            // console.log(x, y+currentX+1, currentY, height - currentX - 1);
+            if (currentX - y > 0) {
+                this.divideGrid(res, x, y, currentY, currentX-y);
+            }
+            
+            if (y+currentX+1 < this.maxRow) {
+                this.divideGrid(res, x, y+currentX+1, currentY, height - currentX - 1);
+            }
+        }
+        else {
+            
+            // console.log(x, y, currentY-x, currentX);
+            // console.log(x + currentY+1, y, width - currentY -1, currentX);
 
+            if (currentY-x > 0) {
+                this.divideGrid(res, x, y, currentY-x, currentX);
+            }
+
+            if (x+currentY+1 < this.maxCol) {
+                this.divideGrid(res, x + currentY+1, y, width - currentY -1, currentX);
+            }
+        }
+
+
+        // tempX = this.isHorizontal ? currentX + 1 : x;
+        // tempY = this.isHorizontal ? y : currentY+1;
+        // tempHeight = this.isHorizontal ? height - currentX: height;
+        // tempWidth = this.isHorizontal ? width : width - currentY;
+
+        // this.divideGrid(res, tempX, tempY, tempHeight, tempWidth);
     }
 
     plotOnGraph() {
