@@ -28,6 +28,13 @@ export const useStyles = makeStyles((theme) =>
                 border: "none !important",
                 backgroundColor: "#61dafb"
             },
+            "& td.route": {
+                "&:hover": {
+                    transform: "scale(1.5)"
+                },
+                border: "none !important",
+                backgroundColor: "lightgreen"
+            },
             "& td.source": {
                 "&:hover": {
                     transform: "scale(1.5)"

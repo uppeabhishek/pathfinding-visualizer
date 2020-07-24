@@ -32,6 +32,10 @@ const Header: FunctionComponent = () => {
 
     const graphAlgorithms = useRef([
         {
+            name: "Breath First Search",
+            value: "BFS"
+        },
+        {
             name: "Depth First Search",
             value: "DFS"
         },

@@ -56,7 +56,7 @@ export default class RecursiveDivision {
                     res[currentX][currentY] = 1;
                 }
                 catch(e){
-                    console.log(currentX, currentY);
+                    // console.log(currentX, currentY);
                 }
             }
             if (this.isHorizontal) {

@@ -5,6 +5,7 @@ import { RootState } from "../../reducers";
 import RecursiveBackTracker from "../../MazeGenerationAlgorithms/RecursiveBacktracker";
 import RandomizedPrims from "../../MazeGenerationAlgorithms/RandomizedPrims";
 import RecursiveDivision from "../../MazeGenerationAlgorithms/RecursiveDivision";
+import { BreathFirstSearch } from "../../PathFindingAlgorithms/BreathFirstSearch";
 
 const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, width }) => {
     const classes = useStyles();
@@ -76,9 +77,9 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
             }
             res.push(
                 <td
-                    key={`${row}${i}`}
+                    key={`${row}-${i}`}
                     className={className}
-                    data-id={`${row}${i}`}
+                    data-id={`${row}-${i}`}
                     style={{
                         width: trWidth,
                         height: trHeight,
@@ -110,6 +111,9 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
     };
 
     const mazeType = useSelector((state: RootState) => state.globals.mazeType);
+    
+    const algorithm = useSelector((state: RootState) => state.globals.algorithm);
+
 
     useEffect(() => {
         if (bodyRef.current) {
@@ -127,6 +131,34 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
             }
         }
     }, [mazeType]);
+
+    useEffect(()=>{
+        if (bodyRef.current) {
+            console.log(algorithm);
+            if (algorithm==="BFS") {
+                const documentSource = document.querySelector(".source") as HTMLElement;
+                const documentDestination = document.querySelector(".destination") as HTMLElement;
+
+                let source:[number, number] = [0,0], destination:[number, number]=[0,0];
+
+                if (documentSource && documentSource.dataset.id) {
+                    const [x, y] = documentSource.dataset.id.split("-");
+                    source[0] = parseInt(x);
+                    source[1] = parseInt(y);
+                }
+
+                if (documentDestination && documentDestination.dataset.id) {
+                    const [x, y] = documentDestination.dataset.id.split("-");
+                    destination[0] = parseInt(x);
+                    destination[1] = parseInt(y);
+                }
+                
+                const BFS = new BreathFirstSearch(bodyRef.current, source, destination);
+                BFS.plotShortestRoute();
+            }
+        }
+
+    }, [algorithm]);
 
     const bodyRef = useRef<HTMLTableSectionElement>(null);
 
