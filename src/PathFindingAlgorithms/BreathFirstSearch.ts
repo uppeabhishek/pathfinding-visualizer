@@ -39,6 +39,10 @@ export class BreathFirstSearch {
     
 
     getShortestRoute() {
+
+        if (!(this.source[0] <= this.rows && this.source[0] > 0 && this.destination[0] <= this.cols && this.destination[0] > 0)) {
+            return null;
+        }
         const array = new Array(this.rows);
         const visited = new Array(this.rows);
 
@@ -46,10 +50,13 @@ export class BreathFirstSearch {
             const temp = [];
             const visitedTemp = new Array(this.cols).fill(false);
             for (let j=0;j<this.cols;j++) {
-                const obj = {distancetance: 0, row: i, col: j};
+                
+                const obj = {distance: 0, row: i, col: j};
+
                 if (i===this.source[0] && j===this.destination[0]) {
-                    obj.distancetance = 0;
+                    obj.distance = 0;
                 }
+                
                 if (this.trNodes[i].children[j].classList.contains("selected")) {
                     visitedTemp[j] = true;
                 }

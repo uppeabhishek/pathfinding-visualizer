@@ -1,4 +1,3 @@
-import { throws } from "assert";
 import { HeapAndMap } from "../DataStructures/HeapAndMap";
 
 export class Dijkstras {
@@ -21,7 +20,7 @@ export class Dijkstras {
     }
 
     private isValid(x: number, y: number) {
-        return !(x < 0 || y > 0 || x + 1 >= this.rows || y + 1 >= this.cols);
+        return !(x < 0 || y < 0 || x >= this.rows || y >= this.cols);
     }
 
     private getNeighbours(q: HeapAndMap, x: number, y: number) {
@@ -61,36 +60,61 @@ export class Dijkstras {
 
         const heapMap = new HeapAndMap();
 
-        heapMap.add(this.source[0], this.source[1], 0, null);
+        for (let i=0; i<this.rows; i++) {
+            for (let j=0;j<this.cols;j++) {
+                if (this.trNodes[i].children[j].classList.contains("selected")) {
+                    heapMap.add(i, j, this.maxInt, null, true);
+                }
+                else {
+                    if (this.source[0] === i && this.source[1] === j){
+                        console.log(this.source, i, j)
+                        heapMap.add(i, j, 0, null);
+                    }
+                    else {
+                        heapMap.add(i, j, this.maxInt, null);
+                    }
+                }
+            }
+        }
 
+        let cnt = 0;
+
+        let resultNode;
+
+        let previousNode;
 
         while (!heapMap.isEmpty()) {
 
+            cnt+=1;
+            if (cnt === 1000) {
+                break;
+            }
+
             const currentNode = heapMap.extractMin();
 
-            if (currentNode) { 
-
+            if (currentNode) {
                 const coordinates = currentNode.getCoordinates();
 
-                if (coordinates.x === this.destination[1] && coordinates.y === this.destination[1]) {
+                if (coordinates.x === this.destination[0] && coordinates.y === this.destination[1]) {
+                    console.log(previousNode);
+                    resultNode = currentNode;
                     break;
                 }
                 
                 const neighbours = this.getNeighbours(heapMap, coordinates.x, coordinates.y);
                 
                 neighbours.forEach((neighbour) => {
-                    console.log(neighbour);
-                    // const node = heapMap.getNode(neighbour[0], neighbour[1]);
-                    // if (node) {
-                    //     node.setDistance(currentNode.getDistance()+1);
-                    // }
-                    // else {
-                    //     heapMap.add(neighbour[0], neighbour[1], currentNode.getDistance()+1, currentNode);
-                    // }
+                    const node = heapMap.getNode(neighbour[0], neighbour[1]);
+                    if (node) {
+                        node.setDistance(currentNode.getDistance()+1);
+                        node.setParent(currentNode);
+                    }
                 });
-            }
 
+                previousNode = currentNode;
+            }
         }
+        console.log(resultNode);
     }
 
     plotShortestRoute() {
