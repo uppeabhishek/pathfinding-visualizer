@@ -67,7 +67,6 @@ export class Dijkstras {
                 }
                 else {
                     if (this.source[0] === i && this.source[1] === j){
-                        console.log(this.source, i, j)
                         heapMap.add(i, j, 0, null);
                     }
                     else {
@@ -77,18 +76,9 @@ export class Dijkstras {
             }
         }
 
-        let cnt = 0;
-
         let resultNode;
 
-        let previousNode;
-
         while (!heapMap.isEmpty()) {
-
-            cnt+=1;
-            if (cnt === 1000) {
-                break;
-            }
 
             const currentNode = heapMap.extractMin();
 
@@ -96,8 +86,8 @@ export class Dijkstras {
                 const coordinates = currentNode.getCoordinates();
 
                 if (coordinates.x === this.destination[0] && coordinates.y === this.destination[1]) {
-                    console.log(previousNode);
                     resultNode = currentNode;
+                    console.log(heapMap)
                     break;
                 }
                 
@@ -106,12 +96,11 @@ export class Dijkstras {
                 neighbours.forEach((neighbour) => {
                     const node = heapMap.getNode(neighbour[0], neighbour[1]);
                     if (node) {
-                        node.setDistance(currentNode.getDistance()+1);
+                        node.setDistance(currentNode.getDistance() + 1);
                         node.setParent(currentNode);
+                        heapMap.changePosition(node.getArrayIndex());
                     }
                 });
-
-                previousNode = currentNode;
             }
         }
         console.log(resultNode);
