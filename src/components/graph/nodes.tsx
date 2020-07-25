@@ -6,6 +6,8 @@ import RecursiveBackTracker from "../../MazeGenerationAlgorithms/RecursiveBacktr
 import RandomizedPrims from "../../MazeGenerationAlgorithms/RandomizedPrims";
 import RecursiveDivision from "../../MazeGenerationAlgorithms/RecursiveDivision";
 import { BreathFirstSearch } from "../../PathFindingAlgorithms/BreathFirstSearch";
+import { Dijkstras } from "../../PathFindingAlgorithms/Dijkstras";
+
 
 const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, width }) => {
     const classes = useStyles();
@@ -134,27 +136,30 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
 
     useEffect(()=>{
         if (bodyRef.current) {
-            console.log(algorithm);
+            const documentSource = document.querySelector(".source") as HTMLElement;
+            const documentDestination = document.querySelector(".destination") as HTMLElement;
+
+            let source:[number, number] = [0,0], destination:[number, number]=[0,0];
+
+            if (documentSource && documentSource.dataset.id) {
+                const [x, y] = documentSource.dataset.id.split("-");
+                source[0] = parseInt(x);
+                source[1] = parseInt(y);
+            }
+
+            if (documentDestination && documentDestination.dataset.id) {
+                const [x, y] = documentDestination.dataset.id.split("-");
+                destination[0] = parseInt(x);
+                destination[1] = parseInt(y);
+            }
+
             if (algorithm==="BFS") {
-                const documentSource = document.querySelector(".source") as HTMLElement;
-                const documentDestination = document.querySelector(".destination") as HTMLElement;
-
-                let source:[number, number] = [0,0], destination:[number, number]=[0,0];
-
-                if (documentSource && documentSource.dataset.id) {
-                    const [x, y] = documentSource.dataset.id.split("-");
-                    source[0] = parseInt(x);
-                    source[1] = parseInt(y);
-                }
-
-                if (documentDestination && documentDestination.dataset.id) {
-                    const [x, y] = documentDestination.dataset.id.split("-");
-                    destination[0] = parseInt(x);
-                    destination[1] = parseInt(y);
-                }
-                
                 const BFS = new BreathFirstSearch(bodyRef.current, source, destination);
                 BFS.plotShortestRoute();
+            }
+            else if(algorithm === "Dijkstra's") {
+                const Dijkstra = new Dijkstras(bodyRef.current, source, destination);
+                Dijkstra.plotShortestRoute();
             }
         }
 

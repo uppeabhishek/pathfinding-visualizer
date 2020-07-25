@@ -36,8 +36,8 @@ const Header: FunctionComponent = () => {
             value: "BFS"
         },
         {
-            name: "Depth First Search",
-            value: "DFS"
+            name: "Dijkstra's",
+            value: "Dijkstra's"
         },
         {
             name: "A*",
