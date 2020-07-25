@@ -1,35 +1,52 @@
 class Node {
     private readonly x: number;
     private readonly y: number;
-    private readonly distance: number;
+    private distance: number;
+    private parent: Node | null;
 
-    constructor(x: number, y: number, distance: number) {
+    constructor(x: number, y: number, distance: number,parent: Node | null) {
         this.x = x;
         this.y = y;
         this.distance = distance;
+        this.parent = parent;
     }
 
     getDistance() {
         return this.distance;
     }
+
+    getCoordinates() {
+        return {x: this.x, y: this.y};
+    }
+
+    setDistance(distance: number) {
+        this.distance = distance; 
+    }
+
+    setParent(parent: Node | null) {
+        this.parent = parent;
+    }
+
+    getParent() {
+        return this.parent;
+    }
 }
 
 export class HeapAndMap {
     private readonly array: Array<Node>;
-    private readonly set: Set<string>;
-    private readonly parentDict: {};
+    private readonly dict: {[key: string]: Node};
+
     constructor() {
         this.array = [];
-        this.set = new Set();
-        this.parentDict = {};
+        this.dict = {};
     }
 
-    add(x: number, y: number, distance: number) {
-        let node = new Node(x, y, distance);
+    add(x: number, y: number, distance: number, parent: Node | null) {
+        let node = new Node(x, y, distance, parent);
 
         this.array.push(node);
 
-        this.set.add(x.toString() + "_" + y.toString());
+        this.dict[x.toString() + "_" + y.toString()] = node;
         
         let length = this.array.length;
         
@@ -56,20 +73,36 @@ export class HeapAndMap {
         return false;
     }
 
+    getKeyNotation(x: number, y: number) {
+        return x.toString() + "_" + y.toString();
+    }
+
     contains(x: number, y: number) {
-        return this.set.has(x.toString() + "_" + y.toString());
+        return this.getKeyNotation(x,y) in this.dict;
+    }
+
+    getNode(x: number, y: number) {
+        if (this.contains(x, y)) {
+            return this.dict[this.getKeyNotation(x, y)];
+        }
+        return null;
     }
 
     extractMin() {
         if (this.isEmpty()) {
-            return -1;
+            return null;
         }
 
         const firstElement = this.array[0];
+
+        delete this.dict[this.getKeyNotation(firstElement.getCoordinates().x, firstElement.getCoordinates().y)];
+
         const lastElement = this.array.pop();
         
         if (lastElement) {
-            this.array[0] = lastElement;
+            if (this.array.length) {
+                this.array[0] = lastElement;
+            }
         }
 
         let index = 0;
@@ -83,7 +116,7 @@ export class HeapAndMap {
             }
 
             if (rightChildIndex >= this.array.length) {
-                if (this.compareAndSwapElements(index, leftChildIndex)) {
+                if (this.compareAndSwapElements(index, leftChildIndex)!==false) {
                     index = leftChildIndex;
                 }
                 else {
@@ -92,7 +125,7 @@ export class HeapAndMap {
             }
             else {
                 if (this.array[leftChildIndex] < this.array[rightChildIndex]) {
-                    if (this.compareAndSwapElements(index, leftChildIndex)) {
+                    if (this.compareAndSwapElements(index, leftChildIndex)!==false) {
                         index = leftChildIndex;
                     }
                     else {
@@ -100,7 +133,7 @@ export class HeapAndMap {
                     }
                 }
                 else {
-                    if (this.compareAndSwapElements(index, rightChildIndex)) {
+                    if (this.compareAndSwapElements(index, rightChildIndex)!==false) {
                         index = rightChildIndex;
                     }
                     else {
@@ -109,6 +142,7 @@ export class HeapAndMap {
                 }
             }
         }
+
         return firstElement;
     }
 
