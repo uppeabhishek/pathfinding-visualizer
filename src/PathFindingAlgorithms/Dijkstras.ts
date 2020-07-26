@@ -83,11 +83,11 @@ export class Dijkstras {
             const currentNode = heapMap.extractMin();
 
             if (currentNode) {
+
                 const coordinates = currentNode.getCoordinates();
 
                 if (coordinates.x === this.destination[0] && coordinates.y === this.destination[1]) {
                     resultNode = currentNode;
-                    console.log(heapMap)
                     break;
                 }
                 

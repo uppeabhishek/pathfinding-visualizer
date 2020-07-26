@@ -80,7 +80,7 @@ export class HeapAndMap {
         
         while (length) {
 
-            length = Math.floor(length / 2);
+            length = Math.floor((length - 1) / 2);
 
             const parentIndex = length;
         
@@ -100,12 +100,11 @@ export class HeapAndMap {
         let swapIndex = length;
 
         try{
-            
             let distance = this.array[index].getDistance();
 
             while (length) {
 
-                length = Math.floor(length / 2);
+                length = Math.floor((length - 1) / 2);
     
                 const parentIndex = length;
                 
@@ -159,16 +158,19 @@ export class HeapAndMap {
         const lastElement = this.array.pop();
         
         if (lastElement) {
-            if (this.array.length) {
-                this.array[0] = lastElement;
-            }
+            this.array[0] = lastElement;
+        }
+        else {
+            // Array is empty after popping last element
+            return firstElement;
         }
 
         let index = 0;
 
         while (index < this.array.length) {
-            const leftChildIndex = 2 * index + 1;
-            const rightChildIndex = 2 * index + 2;
+
+            const leftChildIndex = (2 * index) + 1;
+            const rightChildIndex = (2 * index) + 2;
             
             if (leftChildIndex >= this.array.length) {
                 break;
@@ -183,7 +185,7 @@ export class HeapAndMap {
                 }
             }
             else {
-                if (this.array[leftChildIndex] < this.array[rightChildIndex]) {
+                if (this.array[leftChildIndex].getDistance() <= this.array[rightChildIndex].getDistance()) {
                     if (this.compareAndSwapElements(index, leftChildIndex)!==false) {
                         index = leftChildIndex;
                     }
