@@ -1,26 +1,26 @@
 {
   "files": {
     "main.css": "/pathfinding-visualizer/static/css/main.8145d63f.chunk.css",
-    "main.js": "/pathfinding-visualizer/static/js/main.857786f1.chunk.js",
-    "main.js.map": "/pathfinding-visualizer/static/js/main.857786f1.chunk.js.map",
+    "main.js": "/pathfinding-visualizer/static/js/main.8a31e887.chunk.js",
+    "main.js.map": "/pathfinding-visualizer/static/js/main.8a31e887.chunk.js.map",
     "runtime-main.js": "/pathfinding-visualizer/static/js/runtime-main.b6ae0412.js",
     "runtime-main.js.map": "/pathfinding-visualizer/static/js/runtime-main.b6ae0412.js.map",
     "static/css/2.fbb3538c.chunk.css": "/pathfinding-visualizer/static/css/2.fbb3538c.chunk.css",
-    "static/js/2.0e5a517d.chunk.js": "/pathfinding-visualizer/static/js/2.0e5a517d.chunk.js",
-    "static/js/2.0e5a517d.chunk.js.map": "/pathfinding-visualizer/static/js/2.0e5a517d.chunk.js.map",
+    "static/js/2.6c443044.chunk.js": "/pathfinding-visualizer/static/js/2.6c443044.chunk.js",
+    "static/js/2.6c443044.chunk.js.map": "/pathfinding-visualizer/static/js/2.6c443044.chunk.js.map",
     "index.html": "/pathfinding-visualizer/index.html",
-    "precache-manifest.9b31bb2bb423af1afe3cae3fc68bcb1a.js": "/pathfinding-visualizer/precache-manifest.9b31bb2bb423af1afe3cae3fc68bcb1a.js",
+    "precache-manifest.015ad942d29a164a93a75067679c6ded.js": "/pathfinding-visualizer/precache-manifest.015ad942d29a164a93a75067679c6ded.js",
     "service-worker.js": "/pathfinding-visualizer/service-worker.js",
     "static/css/2.fbb3538c.chunk.css.map": "/pathfinding-visualizer/static/css/2.fbb3538c.chunk.css.map",
     "static/css/main.8145d63f.chunk.css.map": "/pathfinding-visualizer/static/css/main.8145d63f.chunk.css.map",
-    "static/js/2.0e5a517d.chunk.js.LICENSE.txt": "/pathfinding-visualizer/static/js/2.0e5a517d.chunk.js.LICENSE.txt",
+    "static/js/2.6c443044.chunk.js.LICENSE.txt": "/pathfinding-visualizer/static/js/2.6c443044.chunk.js.LICENSE.txt",
     "static/media/index.css": "/pathfinding-visualizer/static/media/roboto-latin-900italic.ebf6d164.woff2"
   },
   "entrypoints": [
     "static/js/runtime-main.b6ae0412.js",
     "static/css/2.fbb3538c.chunk.css",
-    "static/js/2.0e5a517d.chunk.js",
+    "static/js/2.6c443044.chunk.js",
     "static/css/main.8145d63f.chunk.css",
-    "static/js/main.857786f1.chunk.js"
+    "static/js/main.8a31e887.chunk.js"
   ]
 }
