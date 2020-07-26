@@ -45,9 +45,14 @@ export class Dijkstras {
             }
         ];
         
-        array.forEach((ele) => { 
+        array.forEach((ele) => {
             if (this.isValid(ele.x, ele.y)) {
-                neigbours.push([ele.x, ele.y]);
+                const node = q.getNode(ele.x, ele.y);
+                if (node) {
+                    if (!node.containsWall()) {
+                        neigbours.push([ele.x, ele.y]);
+                    }
+                }
             }
         });
         return neigbours;
@@ -103,10 +108,18 @@ export class Dijkstras {
                 });
             }
         }
-        console.log(resultNode);
+        return resultNode;
     }
 
     plotShortestRoute() {
-        this.getShortestRoute();
+        let result = this.getShortestRoute();
+
+        if (result) {
+            while (result && result.getParent()) {
+                const coordinates = result.getCoordinates();
+                this.trNodes[coordinates.x].children[coordinates.y].classList.add("route");
+                result = result.getParent();
+            }
+        }
     }
 }

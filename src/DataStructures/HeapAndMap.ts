@@ -42,6 +42,10 @@ class Node {
     getParent() {
         return this.parent;
     }
+
+    containsWall() {
+        return this.isWall;
+    }
 }
 
 export class HeapAndMap {
@@ -117,7 +121,7 @@ export class HeapAndMap {
                 swapIndex = parentIndex;
             }
         }
-        catch(e){
+        catch(e) {
             console.log(index);
         }
 
@@ -186,7 +190,7 @@ export class HeapAndMap {
             }
             else {
                 if (this.array[leftChildIndex].getDistance() <= this.array[rightChildIndex].getDistance()) {
-                    if (this.compareAndSwapElements(index, leftChildIndex)!==false) {
+                    if (this.compareAndSwapElements(index, leftChildIndex) !== false) {
                         index = leftChildIndex;
                     }
                     else {
@@ -194,7 +198,7 @@ export class HeapAndMap {
                     }
                 }
                 else {
-                    if (this.compareAndSwapElements(index, rightChildIndex)!==false) {
+                    if (this.compareAndSwapElements(index, rightChildIndex) !== false) {
                         index = rightChildIndex;
                     }
                     else {
