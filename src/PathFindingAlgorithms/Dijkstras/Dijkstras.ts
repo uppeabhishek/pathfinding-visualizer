@@ -1,4 +1,4 @@
-import { HeapAndMap } from "../DataStructures/HeapAndMap";
+import { HeapAndMap } from "./HeapAndMap";
 
 export class Dijkstras {
     private readonly grid: HTMLTableSectionElement

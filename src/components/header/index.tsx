@@ -41,7 +41,7 @@ const Header: FunctionComponent = () => {
         },
         {
             name: "A*",
-            value: "A*"
+            value: "AStar"
         }
     ]);
 

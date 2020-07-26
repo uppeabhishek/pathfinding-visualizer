@@ -6,7 +6,8 @@ import RecursiveBackTracker from "../../MazeGenerationAlgorithms/RecursiveBacktr
 import RandomizedPrims from "../../MazeGenerationAlgorithms/RandomizedPrims";
 import RecursiveDivision from "../../MazeGenerationAlgorithms/RecursiveDivision";
 import { BreathFirstSearch } from "../../PathFindingAlgorithms/BreathFirstSearch";
-import { Dijkstras } from "../../PathFindingAlgorithms/Dijkstras";
+import { Dijkstras } from "../../PathFindingAlgorithms/Dijkstras/Dijkstras";
+import { AStar } from "../../PathFindingAlgorithms/A*/A*";
 
 
 const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, width }) => {
@@ -160,6 +161,10 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
             else if(algorithm === "Dijkstra's") {
                 const Dijkstra = new Dijkstras(bodyRef.current, source, destination);
                 Dijkstra.plotShortestRoute();
+            }
+            else if(algorithm === "AStar") {
+                const AS = new AStar(bodyRef.current, source, destination);
+                AS.plotShortestRoute();
             }
         }
 
