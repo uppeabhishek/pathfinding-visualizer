@@ -161,7 +161,7 @@ export class HeapAndMap {
 
         const lastElement = this.array.pop();
         
-        if (lastElement) {
+        if (this.array.length && lastElement) {
             this.array[0] = lastElement;
         }
         else {

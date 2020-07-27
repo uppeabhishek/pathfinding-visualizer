@@ -1,7 +1,7 @@
 class Node {
     private readonly x: number;
     private readonly y: number;
-    private readonly f: number;
+    private f: number;
     private readonly g: number;
     private readonly h: number;    
     private parent: Node | null;
@@ -39,7 +39,19 @@ class Node {
         return this.parent;
     }
 
-    getDistance() {
+    setDistance(f: number) {
+        this.f = f; 
+    }
+
+    getg() {
+        return this.f;
+    }
+
+    geth() {
+        return this.h
+    }
+
+    getf() {
         return this.f;
     }
 
@@ -49,7 +61,7 @@ class Node {
 }
 
 // We are using manhattan distance because we are going traversing only four neighbours
-function getManhattanDistance(currentCell: {x: number,y: number}, goalCell: {x: number, y: number}) {
+export function getManhattanDistance(currentCell: {x: number,y: number}, goalCell: {x: number, y: number}) {
     return Math.abs(currentCell.x - goalCell.x) 
         +  Math.abs(currentCell.y - goalCell.y);
 }
@@ -79,11 +91,7 @@ export class HeapAndMap {
         this.array[indexToSwap] = temp;
     }
 
-    add(x: number, y: number, distance: number, parent: Node | null, isWall: boolean = false) {
-        
-        const g = distance;
-        const h = getManhattanDistance({x: x, y: y}, {x: this.goal.x, y: this.goal.y});
-        const f = g + h;
+    add(x: number, y: number,f: number, g: number, h: number,  parent: Node | null, isWall: boolean = false, source: boolean = false) {
 
         let node = new Node(x, y, f,g, h, parent, isWall, this.array.length);
 
@@ -101,7 +109,7 @@ export class HeapAndMap {
 
             const parentIndex = length;
         
-            if (this.array[parentIndex].getDistance() > distance) {  
+            if (this.array[parentIndex].getf() > f) {  
                 this.swapElements(parentIndex, swapIndex);
             }
             else {
@@ -117,7 +125,7 @@ export class HeapAndMap {
         let swapIndex = length;
 
         try{
-            let distance = this.array[index].getDistance();
+            let distance = this.array[index].getf();
 
             while (length) {
 
@@ -125,7 +133,7 @@ export class HeapAndMap {
     
                 const parentIndex = length;
                 
-                if (this.array[parentIndex].getDistance() > distance) {  
+                if (this.array[parentIndex].getf() > distance) {  
                     this.swapElements(parentIndex, swapIndex);
                 }
                 else {
@@ -141,7 +149,7 @@ export class HeapAndMap {
     }
 
     private compareAndSwapElements(index: number, leftRightIndex: number) {
-        if (this.array[index].getDistance() > this.array[leftRightIndex].getDistance()) {
+        if (this.array[index].getf() > this.array[leftRightIndex].getf()) {
             this.swapElements(index, leftRightIndex);
             return leftRightIndex;
         }
@@ -174,7 +182,7 @@ export class HeapAndMap {
 
         const lastElement = this.array.pop();
         
-        if (lastElement) {
+        if (this.array.length && lastElement) {
             this.array[0] = lastElement;
         }
         else {
@@ -202,7 +210,7 @@ export class HeapAndMap {
                 }
             }
             else {
-                if (this.array[leftChildIndex].getDistance() <= this.array[rightChildIndex].getDistance()) {
+                if (this.array[leftChildIndex].getf() <= this.array[rightChildIndex].getf()) {
                     if (this.compareAndSwapElements(index, leftChildIndex) !== false) {
                         index = leftChildIndex;
                     }
