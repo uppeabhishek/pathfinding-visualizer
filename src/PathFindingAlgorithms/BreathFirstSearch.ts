@@ -56,7 +56,7 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
                     obj.distance = 0;
                 }
 
-                if (this.trNodes[i].children[j].classList.contains("selected")) {
+                if (this.trNodes[i].children[j].classList.contains("wall")) {
                     visitedTemp[j] = true;
                 }
                 temp.push(obj);

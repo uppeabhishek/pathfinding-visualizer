@@ -13,6 +13,10 @@ export class PathFindingAlgorithm {
 
     protected readonly maxInt: number;
 
+    protected readonly weightNode: number;
+
+    protected readonly defaultWeight: number;
+
     constructor(
         grid: HTMLTableSectionElement,
         source: [number, number],
@@ -25,6 +29,8 @@ export class PathFindingAlgorithm {
         this.rows = this.trNodes.length;
         this.cols = this.trNodes[0].children.length;
         this.maxInt = Number.MAX_SAFE_INTEGER;
+        this.weightNode = 15;
+        this.defaultWeight = 1;
     }
 
     protected isValid(x: number, y: number) {

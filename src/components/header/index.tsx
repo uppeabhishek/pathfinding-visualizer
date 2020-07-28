@@ -11,8 +11,9 @@ import {
 } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import { useStyles } from "./styles";
-import { changeAlgorithm, changeMazeType } from "../../actions";
+import { changeAlgorithm, changeMazeType, toggleVisualizeAlgorithm } from "../../actions";
 import { RootState } from "../../reducers";
+import { clearRoute, clearWeights, clearBoard, clearWalls } from "../../commonUtilities";
 
 const Header: FunctionComponent = () => {
     const dispatch = useDispatch();
@@ -105,7 +106,13 @@ const Header: FunctionComponent = () => {
                         </Select>
                     </div>
 
-                    <Button variant="contained">Visualize</Button>
+                    <Button
+                        variant="contained"
+                        // @ts-ignore
+                        onClick={() => dispatch(toggleVisualizeAlgorithm(new Boolean(true)))}
+                    >
+                        Visualize
+                    </Button>
 
                     <div>
                         <Typography gutterBottom={true} id="animationSpeedSlider">
@@ -123,15 +130,19 @@ const Header: FunctionComponent = () => {
                         />
                     </div>
 
-                    <Button color="secondary" variant="contained">
+                    <Button color="secondary" variant="contained" onClick={clearRoute}>
                         Clear Route
                     </Button>
 
-                    <Button color="secondary" variant="contained">
+                    <Button color="secondary" variant="contained" onClick={clearWalls}>
+                        Clear Walls
+                    </Button>
+
+                    <Button color="secondary" variant="contained" onClick={clearWeights}>
                         Clear Weights
                     </Button>
 
-                    <Button color="secondary" variant="contained">
+                    <Button color="secondary" variant="contained" onClick={clearBoard}>
                         Clear Board
                     </Button>
                 </Toolbar>

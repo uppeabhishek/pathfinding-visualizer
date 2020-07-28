@@ -17,6 +17,8 @@ class Node {
 
     private arrayIndex: number;
 
+    private readonly isWeight: boolean;
+
     constructor(
         x: number,
         y: number,
@@ -25,7 +27,8 @@ class Node {
         h: number,
         parent: Node | null,
         isWall: boolean,
-        arrayIndex: number
+        arrayIndex: number,
+        isWeight: boolean
     ) {
         this.x = x;
         this.y = y;
@@ -34,6 +37,7 @@ class Node {
         this.h = h;
         this.parent = parent;
         this.isWall = isWall;
+        this.isWeight = isWeight;
         this.arrayIndex = arrayIndex;
     }
 
@@ -88,6 +92,10 @@ class Node {
     containsWall() {
         return this.isWall;
     }
+
+    containsWeight() {
+        return this.isWeight;
+    }
 }
 
 // We are using manhattan distance because we are going traversing only four neighbours
@@ -116,9 +124,10 @@ export class HeapAndMap extends GenericHeapAndMap {
         g: number,
         h: number,
         parent: Node | null,
-        isWall = false
+        isWall = false,
+        isWeight = false
     ) {
-        const node = new Node(x, y, f, g, h, parent, isWall, this.array.length);
+        const node = new Node(x, y, f, g, h, parent, isWall, this.array.length, isWeight);
 
         this.array.push(node);
 

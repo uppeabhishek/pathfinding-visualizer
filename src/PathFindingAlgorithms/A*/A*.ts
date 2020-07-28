@@ -48,7 +48,9 @@ export class AStar extends PathFindingAlgorithm {
 
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < this.cols; j++) {
-                if (this.trNodes[i].children[j].classList.contains("wall")) {
+                if (this.trNodes[i].children[j].classList.contains("weight")) {
+                    heapMap.add(i, j, this.maxInt, this.maxInt, this.maxInt, null, true, true);
+                } else if (this.trNodes[i].children[j].classList.contains("wall")) {
                     heapMap.add(i, j, this.maxInt, this.maxInt, this.maxInt, null, true);
                 } else if (this.source[0] === i && this.source[1] === j) {
                     heapMap.add(i, j, 0, 0, 0, null);
@@ -83,7 +85,9 @@ export class AStar extends PathFindingAlgorithm {
                 for (const neighbour of neighbours) {
                     const openListNode = heapMap.getOpenListNode(neighbour[0], neighbour[1]);
 
-                    const g = currentNode.getg() + 1;
+                    const g =
+                        currentNode.getg() +
+                        (currentNode.containsWeight() ? this.weightNode : this.defaultWeight);
                     const h = getManhattanDistance(
                         { x: neighbour[0], y: neighbour[1] },
                         { x: this.destination[0], y: this.destination[1] }

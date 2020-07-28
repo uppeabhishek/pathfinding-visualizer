@@ -13,19 +13,23 @@ class Node {
 
     private arrayIndex: number;
 
+    private readonly isWeight: boolean;
+
     constructor(
         x: number,
         y: number,
         distance: number,
         parent: Node | null,
         isWall: boolean,
-        arrayIndex: number
+        arrayIndex: number,
+        isWeight: boolean
     ) {
         this.x = x;
         this.y = y;
         this.distance = distance;
         this.parent = parent;
         this.isWall = isWall;
+        this.isWeight = isWeight;
         this.arrayIndex = arrayIndex;
     }
 
@@ -60,6 +64,10 @@ class Node {
     containsWall() {
         return this.isWall;
     }
+
+    containsWeight() {
+        return this.isWeight;
+    }
 }
 
 export class HeapAndMap extends GenericHeapAndMap {
@@ -70,8 +78,15 @@ export class HeapAndMap extends GenericHeapAndMap {
         this.dict = {};
     }
 
-    add(x: number, y: number, distance: number, parent: Node | null, isWall = false) {
-        const node = new Node(x, y, distance, parent, isWall, this.array.length);
+    add(
+        x: number,
+        y: number,
+        distance: number,
+        parent: Node | null,
+        isWall = false,
+        isWeight = false
+    ) {
+        const node = new Node(x, y, distance, parent, isWall, this.array.length, isWeight);
 
         this.array.push(node);
 

@@ -46,7 +46,9 @@ export class Dijkstras extends PathFindingAlgorithm {
 
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < this.cols; j++) {
-                if (this.trNodes[i].children[j].classList.contains("selected")) {
+                if (this.trNodes[i].children[j].classList.contains("weight")) {
+                    heapMap.add(i, j, this.maxInt, null, true, true);
+                } else if (this.trNodes[i].children[j].classList.contains("wall")) {
                     heapMap.add(i, j, this.maxInt, null, true);
                 } else if (this.source[0] === i && this.source[1] === j) {
                     heapMap.add(i, j, 0, null);
@@ -78,7 +80,10 @@ export class Dijkstras extends PathFindingAlgorithm {
                     const node = heapMap.getNode(neighbour[0], neighbour[1]);
 
                     if (node) {
-                        node.setDistance(currentNode.getDistance() + 1);
+                        node.setDistance(
+                            currentNode.getDistance() +
+                                (node.containsWeight() ? this.weightNode : this.defaultWeight)
+                        );
                         node.setParent(currentNode);
                         heapMap.changePosition(node.getArrayIndex());
                     }

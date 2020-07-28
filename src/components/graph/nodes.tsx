@@ -8,6 +8,8 @@ import RecursiveDivision from "../../MazeGenerationAlgorithms/RecursiveDivision"
 import { BreathFirstSearch } from "../../PathFindingAlgorithms/BreathFirstSearch";
 import { Dijkstras } from "../../PathFindingAlgorithms/Dijkstras/Dijkstras";
 import { AStar } from "../../PathFindingAlgorithms/A*/A*";
+import weight from "../../assets/weight.svg";
+import { clearBoard, clearWeights } from "../../commonUtilities";
 
 const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, width }) => {
     const classes = useStyles();
@@ -19,10 +21,16 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
     const cols = Math.floor(width / trWidth);
 
     function tdRowListener(e: SyntheticEvent<HTMLTableDataCellElement>) {
+        if (dict.current.wpressed) {
+            addWeight(e);
+
+            return;
+        }
+
         const currentTargetClassList = e.currentTarget.classList;
         const classes = new Set(e.currentTarget.classList);
 
-        if (classes.has("source") || classes.has("destination")) {
+        if (classes.has("source") || classes.has("destination") || classes.has("weight")) {
             return;
         }
 
@@ -35,8 +43,11 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
 
     let shouldMouseEnter = false;
 
+    const dict = useRef({ wpressed: false });
+
     function onMouseDown(e: SyntheticEvent<HTMLTableDataCellElement>) {
         tdRowListener(e);
+
         shouldMouseEnter = true;
     }
 
@@ -47,6 +58,32 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
     function onMouseEnter(e: SyntheticEvent<HTMLTableDataCellElement>) {
         if (shouldMouseEnter) {
             tdRowListener(e);
+        }
+    }
+
+    function addWeight(e: SyntheticEvent) {
+        const currentTargetClassList = e.currentTarget.classList;
+        const classes = new Set(e.currentTarget.classList);
+
+        if (classes.has("source") || classes.has("destination")) {
+            return;
+        }
+
+        e.currentTarget.className = "";
+
+        if (!classes.has("weight")) {
+            const imgElement = document.createElement("img");
+
+            imgElement.setAttribute("src", weight);
+            imgElement.setAttribute("width", trWidth.toString());
+            imgElement.setAttribute("height", trHeight.toString());
+
+            e.currentTarget.appendChild(imgElement);
+
+            currentTargetClassList.add("weight");
+        } else {
+            e.currentTarget.innerHTML = "";
+            currentTargetClassList.remove("weight");
         }
     }
 
@@ -113,12 +150,19 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
         return <>{res}</>;
     };
 
+    const keyDownFunc = useRef<(e: any) => void>();
+
+    const keyUpFunc = useRef<(e: any) => void>();
+
     const mazeType = useSelector((state: RootState) => state.globals.mazeType);
 
     const algorithm = useSelector((state: RootState) => state.globals.algorithm);
 
+    const vAlgorithm = useSelector((state: RootState) => state.globals.vAlgorithm);
+
     useEffect(() => {
         if (bodyRef.current) {
+            clearBoard();
             if (mazeType === "recursiveBackTracker") {
                 const recursiveBacktracker = new RecursiveBackTracker(bodyRef.current, [0, 0]);
 
@@ -134,6 +178,26 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
             }
         }
     }, [mazeType]);
+
+    useEffect(() => {
+        const unWeightAlgorithms = new Set(["BFS"]);
+
+        if (unWeightAlgorithms.has(algorithm)) {
+            clearWeights();
+
+            // @ts-ignore
+            window.removeEventListener("keydown", keyDownFunc.current);
+
+            // @ts-ignore
+            window.removeEventListener("keyup", keyUpFunc.current);
+        } else {
+            // @ts-ignore
+            window.addEventListener("keydown", keyDownFunc.current);
+
+            // @ts-ignore
+            window.addEventListener("keyup", keyUpFunc.current);
+        }
+    }, [algorithm]);
 
     useEffect(() => {
         if (bodyRef.current) {
@@ -171,7 +235,22 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
                 AS.plotShortestRoute();
             }
         }
-    }, [algorithm]);
+    }, [vAlgorithm]);
+
+    useEffect(() => {
+        keyDownFunc.current = (e: any) => {
+            // W and w
+            if (e.keyCode === 119 || e.keyCode === 87) {
+                dict.current.wpressed = true;
+                e.preventDefault();
+            }
+        };
+
+        keyUpFunc.current = (e: any) => {
+            dict.current.wpressed = false;
+            e.preventDefault();
+        };
+    }, []);
 
     const bodyRef = useRef<HTMLTableSectionElement>(null);
 
