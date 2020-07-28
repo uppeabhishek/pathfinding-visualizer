@@ -1,120 +1,126 @@
-import { HeapAndMap } from "./HeapAndMap";
-import {getManhattanDistance} from "./HeapAndMap";
+import { HeapAndMap, getManhattanDistance } from "./HeapAndMap";
 
-export class AStar {
-    private readonly grid: HTMLTableSectionElement
-    private readonly source: [number, number];
-    private readonly destination: [number, number];
-    private readonly rows: number;
-    private readonly cols: number;
-    private readonly trNodes: HTMLCollectionOf<Element>;
-    private readonly maxInt: number;
+import { PathFindingAlgorithm } from "..";
 
-    constructor(grid: HTMLTableSectionElement, source: [number, number], destination: [number, number]) {
-        this.grid = grid;
-        this.source = source;
-        this.destination = destination;
-        this.trNodes = this.grid.children;
-        this.rows = this.trNodes.length;
-        this.cols = this.trNodes[0].children.length;
-        this.maxInt = Number.MAX_SAFE_INTEGER;
-    }
-
-    private isValid(x: number, y: number) {
-        return !(x < 0 || y < 0 || x >= this.rows || y >= this.cols);
+export class AStar extends PathFindingAlgorithm {
+    constructor(
+        grid: HTMLTableSectionElement,
+        source: [number, number],
+        destination: [number, number]
+    ) {
+        super(grid, source, destination);
     }
 
     private getNeighbours(q: HeapAndMap, x: number, y: number) {
+        const array = this.getNeigbourCoordinates(x, y);
         const neigbours: Array<[number, number]> = [];
 
-        const array = [
-            {
-                x: x-1,
-                y: y
-            },
-            {
-                x: x,
-                y: y-1
-            },
-            {
-                x: x+1,
-                y: y
-            },
-            {
-                x: x,
-                y: y+1
-            }
-        ];
-        
         array.forEach((ele) => {
             if (this.isValid(ele.x, ele.y)) {
-                neigbours.push([ele.x, ele.y]);
-                // const node = q.getNode(ele.x, ele.y);
-                // if (node) {
-                //     if (!node.containsWall()) {
-                //         neigbours.push([ele.x, ele.y]);
-                //     }
-                // }
+                const node = q.getOpenListNode(ele.x, ele.y);
+
+                if (node) {
+                    if (!node.containsWall()) {
+                        neigbours.push([ele.x, ele.y]);
+                    }
+                }
             }
         });
+
         return neigbours;
     }
 
     getShortestRoute() {
-
-        if (!(this.source[0] <= this.rows && this.source[0] > 0 && this.destination[0] <= this.cols && this.destination[0] > 0)) {
+        if (
+            !(
+                this.source[0] <= this.rows &&
+                this.source[0] > 0 &&
+                this.destination[0] <= this.cols &&
+                this.destination[0] > 0
+            )
+        ) {
             return null;
         }
 
-        const heapMap = new HeapAndMap({x: this.destination[0], y: this.destination[1]});
+        const heapMap = new HeapAndMap();
 
-        heapMap.add(this.source[0], this.source[1], 0, 0, 0, null, false, true);
+        heapMap.add(this.source[0], this.source[1], 0, 0, 0, null, false);
+
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.cols; j++) {
+                if (this.trNodes[i].children[j].classList.contains("wall")) {
+                    heapMap.add(i, j, this.maxInt, this.maxInt, this.maxInt, null, true);
+                } else if (this.source[0] === i && this.source[1] === j) {
+                    heapMap.add(i, j, 0, 0, 0, null);
+                } else {
+                    heapMap.add(i, j, this.maxInt, this.maxInt, this.maxInt, null);
+                }
+            }
+        }
+
+        let cnt = 0;
 
         let resultNode;
 
-        let cnt = 0;
-        
         while (!heapMap.isEmpty()) {
             const currentNode = heapMap.extractMin();
 
-            console.log(currentNode);
-
-            if (cnt === 100) {
-                console.log(cnt);
-                break;
-            }
-            cnt+=1;
+            cnt += 1;
 
             if (currentNode) {
                 const coordinates = currentNode.getCoordinates();
 
-                if (coordinates.x === this.destination[0] && coordinates.y === this.destination[1]) {
+                if (
+                    coordinates.x === this.destination[0] &&
+                    coordinates.y === this.destination[1]
+                ) {
                     resultNode = currentNode;
                     break;
                 }
 
                 const neighbours = this.getNeighbours(heapMap, coordinates.x, coordinates.y);
-                neighbours.forEach((neighbour) => {
-                    const node = heapMap.getNode(neighbour[0], neighbour[1]);
+
+                for (const neighbour of neighbours) {
+                    const openListNode = heapMap.getOpenListNode(neighbour[0], neighbour[1]);
+
                     const g = currentNode.getg() + 1;
-                    const h = getManhattanDistance({x: neighbour[0], y: neighbour[1]}, {x: this.destination[0], y: this.destination[1]});
+                    const h = getManhattanDistance(
+                        { x: neighbour[0], y: neighbour[1] },
+                        { x: this.destination[0], y: this.destination[1] }
+                    );
                     const f = g + h;
-                    if (node) {
-                        if (node.getf() < f) {
-                            node.setDistance(f);
-                            node.setParent(currentNode);
-                            heapMap.changePosition(node.getArrayIndex());
+
+                    const closedListNode = heapMap.getClosedListNode(neighbour[0], neighbour[1]);
+
+                    if (closedListNode) {
+                        continue;
+                    }
+
+                    if (openListNode) {
+                        if (openListNode.getf() < f) {
+                            continue;
+                        } else {
+                            openListNode.setg(g);
+                            openListNode.seth(h);
+                            openListNode.setf(f);
+                            openListNode.setParent(currentNode);
+                            heapMap.changePosition(openListNode.getArrayIndex());
                         }
                     }
-                    else {
-                        heapMap.add(neighbour[0], neighbour[1], f, g, h, currentNode, false);
-                    }
-                })
+                }
+
+                heapMap.addClosedListNode(
+                    currentNode.getCoordinates().x,
+                    currentNode.getCoordinates().y,
+                    currentNode
+                );
             }
         }
+
+        return resultNode;
     }
 
     plotShortestRoute() {
-        this.getShortestRoute();
+        super.plotShortestRoute(this.getShortestRoute());
     }
 }

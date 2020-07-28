@@ -1,14 +1,32 @@
+import { GenericHeapAndMap } from "../HeapAndMap";
+
 class Node {
     private readonly x: number;
+
     private readonly y: number;
+
     private f: number;
-    private readonly g: number;
-    private readonly h: number;    
+
+    private g: number;
+
+    private h: number;
+
     private parent: Node | null;
+
     private readonly isWall: boolean;
+
     private arrayIndex: number;
 
-    constructor(x: number, y: number, f: number, g: number, h: number, parent: Node | null, isWall: boolean, arrayIndex: number) {
+    constructor(
+        x: number,
+        y: number,
+        f: number,
+        g: number,
+        h: number,
+        parent: Node | null,
+        isWall: boolean,
+        arrayIndex: number
+    ) {
         this.x = x;
         this.y = y;
         this.f = f;
@@ -28,7 +46,7 @@ class Node {
     }
 
     getCoordinates() {
-        return {x: this.x, y: this.y};
+        return { x: this.x, y: this.y };
     }
 
     setParent(parent: Node | null) {
@@ -39,19 +57,31 @@ class Node {
         return this.parent;
     }
 
-    setDistance(f: number) {
-        this.f = f; 
+    setf(f: number) {
+        this.f = f;
+    }
+
+    seth(h: number) {
+        this.h = h;
+    }
+
+    setg(g: number) {
+        this.g = g;
     }
 
     getg() {
-        return this.f;
+        return this.g;
     }
 
     geth() {
-        return this.h
+        return this.h;
     }
 
     getf() {
+        return this.f;
+    }
+
+    getDistance() {
         return this.f;
     }
 
@@ -61,113 +91,74 @@ class Node {
 }
 
 // We are using manhattan distance because we are going traversing only four neighbours
-export function getManhattanDistance(currentCell: {x: number,y: number}, goalCell: {x: number, y: number}) {
-    return Math.abs(currentCell.x - goalCell.x) 
-        +  Math.abs(currentCell.y - goalCell.y);
+export function getManhattanDistance(
+    currentCell: { x: number; y: number },
+    goalCell: { x: number; y: number }
+) {
+    return Math.abs(currentCell.x - goalCell.x) + Math.abs(currentCell.y - goalCell.y);
 }
 
-export class HeapAndMap {
-    private readonly array: Array<Node>;
-    private readonly dict: {[key: string]: Node};
-    private readonly goal: {x: number, y: number}
+export class HeapAndMap extends GenericHeapAndMap {
+    private readonly openList: { [key: string]: Node };
 
-    constructor(goal: {x: number, y: number}) {
-        this.goal = goal;
-        this.array = [];
-        this.dict = {};
+    private readonly closedList: { [key: string]: Node };
+
+    constructor() {
+        super();
+        this.openList = {};
+        this.closedList = {};
     }
 
-    private swapElements(index: number, indexToSwap: number) {
-        const temp = this.array[index];
-
-        const tempIndex = this.array[index].getArrayIndex();
-
-        this.array[index].setArrayIndex(this.array[indexToSwap].getArrayIndex());
-
-        this.array[index] = this.array[indexToSwap];
-
-        this.array[indexToSwap].setArrayIndex(tempIndex);
-
-        this.array[indexToSwap] = temp;
-    }
-
-    add(x: number, y: number,f: number, g: number, h: number,  parent: Node | null, isWall: boolean = false, source: boolean = false) {
-
-        let node = new Node(x, y, f,g, h, parent, isWall, this.array.length);
+    add(
+        x: number,
+        y: number,
+        f: number,
+        g: number,
+        h: number,
+        parent: Node | null,
+        isWall = false
+    ) {
+        const node = new Node(x, y, f, g, h, parent, isWall, this.array.length);
 
         this.array.push(node);
 
-        this.dict[this.getKeyNotation(x,y)] = node;
-        
-        let length = this.array.length;
+        this.openList[this.getKeyNotation(x, y)] = node;
 
-        let swapIndex = length-1;
-        
+        let { length } = this.array;
+
+        let swapIndex = length - 1;
+
         while (length) {
-
             length = Math.floor((length - 1) / 2);
 
             const parentIndex = length;
-        
-            if (this.array[parentIndex].getf() > f) {  
+
+            if (this.array[parentIndex].getf() > f) {
                 this.swapElements(parentIndex, swapIndex);
-            }
-            else {
+            } else {
                 break;
             }
             swapIndex = parentIndex;
         }
     }
 
-    changePosition(index: number) {
-
-        let length = index;
-        let swapIndex = length;
-
-        try{
-            let distance = this.array[index].getf();
-
-            while (length) {
-
-                length = Math.floor((length - 1) / 2);
-    
-                const parentIndex = length;
-                
-                if (this.array[parentIndex].getf() > distance) {  
-                    this.swapElements(parentIndex, swapIndex);
-                }
-                else {
-                    break;
-                }
-                swapIndex = parentIndex;
-            }
-        }
-        catch(e) {
-            console.log(index);
-        }
-
+    addClosedListNode(x: number, y: number, node: Node) {
+        this.closedList[this.getKeyNotation(x, y)] = node;
     }
 
-    private compareAndSwapElements(index: number, leftRightIndex: number) {
-        if (this.array[index].getf() > this.array[leftRightIndex].getf()) {
-            this.swapElements(index, leftRightIndex);
-            return leftRightIndex;
-        }
-        return false;
+    getClosedListNode(x: number, y: number): Node {
+        return this.closedList[this.getKeyNotation(x, y)];
     }
 
-    getKeyNotation(x: number, y: number) {
-        return x.toString() + "-" + y.toString();
+    private contains(x: number, y: number) {
+        return this.getKeyNotation(x, y) in this.openList;
     }
 
-    contains(x: number, y: number) {
-        return this.getKeyNotation(x,y) in this.dict;
-    }
-
-    getNode(x: number, y: number) {
+    getOpenListNode(x: number, y: number) {
         if (this.contains(x, y)) {
-            return this.dict[this.getKeyNotation(x, y)];
+            return this.openList[this.getKeyNotation(x, y)];
         }
+
         return null;
     }
 
@@ -178,14 +169,15 @@ export class HeapAndMap {
 
         const firstElement = this.array[0];
 
-        delete this.dict[this.getKeyNotation(firstElement.getCoordinates().x, firstElement.getCoordinates().y)];
+        delete this.openList[
+            this.getKeyNotation(firstElement.getCoordinates().x, firstElement.getCoordinates().y)
+        ];
 
         const lastElement = this.array.pop();
-        
-        if (this.array.length && lastElement) {
+
+        if (!this.isEmpty() && lastElement) {
             this.array[0] = lastElement;
-        }
-        else {
+        } else {
             // Array is empty after popping last element
             return firstElement;
         }
@@ -193,46 +185,32 @@ export class HeapAndMap {
         let index = 0;
 
         while (index < this.array.length) {
+            const leftChildIndex = 2 * index + 1;
+            const rightChildIndex = 2 * index + 2;
 
-            const leftChildIndex = (2 * index) + 1;
-            const rightChildIndex = (2 * index) + 2;
-            
             if (leftChildIndex >= this.array.length) {
                 break;
             }
 
             if (rightChildIndex >= this.array.length) {
-                if (this.compareAndSwapElements(index, leftChildIndex)!==false) {
+                if (this.compareAndSwapElements(index, leftChildIndex) !== false) {
                     index = leftChildIndex;
-                }
-                else {
+                } else {
                     break;
                 }
-            }
-            else {
-                if (this.array[leftChildIndex].getf() <= this.array[rightChildIndex].getf()) {
-                    if (this.compareAndSwapElements(index, leftChildIndex) !== false) {
-                        index = leftChildIndex;
-                    }
-                    else {
-                        break;
-                    }
+            } else if (this.array[leftChildIndex].getf() <= this.array[rightChildIndex].getf()) {
+                if (this.compareAndSwapElements(index, leftChildIndex) !== false) {
+                    index = leftChildIndex;
+                } else {
+                    break;
                 }
-                else {
-                    if (this.compareAndSwapElements(index, rightChildIndex) !== false) {
-                        index = rightChildIndex;
-                    }
-                    else {
-                        break;
-                    }
-                }
+            } else if (this.compareAndSwapElements(index, rightChildIndex) !== false) {
+                index = rightChildIndex;
+            } else {
+                break;
             }
         }
 
         return firstElement;
-    }
-
-    isEmpty() {
-        return this.array.length === 0;
     }
 }

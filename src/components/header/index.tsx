@@ -9,13 +9,12 @@ import {
     InputLabel,
     Button
 } from "@material-ui/core";
+import { useSelector, useDispatch } from "react-redux";
 import { useStyles } from "./styles";
 import { changeAlgorithm, changeMazeType } from "../../actions";
-import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../reducers";
 
 const Header: FunctionComponent = () => {
-
     const dispatch = useDispatch();
 
     const algorithm = useSelector((state: RootState) => state.globals.algorithm);
@@ -62,7 +61,11 @@ const Header: FunctionComponent = () => {
         <div>
             <AppBar className={classes.header} position="static">
                 <Toolbar className={classes.toolbar}>
-                    <Typography className="cursor-pointer" variant="h4" onClick={() => window.location.reload()}>
+                    <Typography
+                        className="cursor-pointer"
+                        variant="h4"
+                        onClick={() => window.location.reload()}
+                    >
                         Pathfinding Visualizer
                     </Typography>
 

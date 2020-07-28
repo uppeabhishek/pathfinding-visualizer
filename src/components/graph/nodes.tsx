@@ -1,6 +1,6 @@
 import React, { FunctionComponent, SyntheticEvent, useRef, useEffect, useMemo } from "react";
-import { useStyles } from "./styles";
 import { useSelector } from "react-redux";
+import { useStyles } from "./styles";
 import { RootState } from "../../reducers";
 import RecursiveBackTracker from "../../MazeGenerationAlgorithms/RecursiveBacktracker";
 import RandomizedPrims from "../../MazeGenerationAlgorithms/RandomizedPrims";
@@ -8,7 +8,6 @@ import RecursiveDivision from "../../MazeGenerationAlgorithms/RecursiveDivision"
 import { BreathFirstSearch } from "../../PathFindingAlgorithms/BreathFirstSearch";
 import { Dijkstras } from "../../PathFindingAlgorithms/Dijkstras/Dijkstras";
 import { AStar } from "../../PathFindingAlgorithms/A*/A*";
-
 
 const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, width }) => {
     const classes = useStyles();
@@ -27,10 +26,10 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
             return;
         }
 
-        if (classes.has("selected")) {
-            currentTargetClassList.remove("selected");
+        if (classes.has("wall")) {
+            currentTargetClassList.remove("wall");
         } else {
-            currentTargetClassList.add("selected");
+            currentTargetClassList.add("wall");
         }
     }
 
@@ -102,6 +101,7 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
 
     const RowNodes: FunctionComponent = () => {
         const res = [];
+
         for (let i = 0; i < rows; i++) {
             res.push(
                 <tr key={i}>
@@ -114,73 +114,77 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
     };
 
     const mazeType = useSelector((state: RootState) => state.globals.mazeType);
-    
-    const algorithm = useSelector((state: RootState) => state.globals.algorithm);
 
+    const algorithm = useSelector((state: RootState) => state.globals.algorithm);
 
     useEffect(() => {
         if (bodyRef.current) {
             if (mazeType === "recursiveBackTracker") {
                 const recursiveBacktracker = new RecursiveBackTracker(bodyRef.current, [0, 0]);
+
                 recursiveBacktracker.plotOnGraph();
-            }
-            else if (mazeType === "randomizedPrims") {
+            } else if (mazeType === "randomizedPrims") {
                 const randomizedPrims = new RandomizedPrims(bodyRef.current, [0, 0]);
+
                 randomizedPrims.plotOnGraph();
-            }
-            else if (mazeType === "recursiveDivision") {
+            } else if (mazeType === "recursiveDivision") {
                 const recursiveDivision = new RecursiveDivision(bodyRef.current);
+
                 recursiveDivision.plotOnGraph();
             }
         }
     }, [mazeType]);
 
-    useEffect(()=>{
+    useEffect(() => {
         if (bodyRef.current) {
             const documentSource = document.querySelector(".source") as HTMLElement;
             const documentDestination = document.querySelector(".destination") as HTMLElement;
 
-            let source:[number, number] = [0,0], destination:[number, number]=[0,0];
+            const source: [number, number] = [0, 0];
+            const destination: [number, number] = [0, 0];
 
             if (documentSource && documentSource.dataset.id) {
                 const [x, y] = documentSource.dataset.id.split("-");
+
                 source[0] = parseInt(x);
                 source[1] = parseInt(y);
             }
 
             if (documentDestination && documentDestination.dataset.id) {
                 const [x, y] = documentDestination.dataset.id.split("-");
+
                 destination[0] = parseInt(x);
                 destination[1] = parseInt(y);
             }
 
-            if (algorithm==="BFS") {
+            if (algorithm === "BFS") {
                 const BFS = new BreathFirstSearch(bodyRef.current, source, destination);
+
                 BFS.plotShortestRoute();
-            }
-            else if(algorithm === "Dijkstra's") {
+            } else if (algorithm === "Dijkstra's") {
                 const Dijkstra = new Dijkstras(bodyRef.current, source, destination);
+
                 Dijkstra.plotShortestRoute();
-            }
-            else if(algorithm === "AStar") {
+            } else if (algorithm === "AStar") {
                 const AS = new AStar(bodyRef.current, source, destination);
+
                 AS.plotShortestRoute();
             }
         }
-
     }, [algorithm]);
 
     const bodyRef = useRef<HTMLTableSectionElement>(null);
 
-    return useMemo(() => {
-        return (
+    return useMemo(
+        () => (
             <table className={classes.table}>
                 <tbody ref={bodyRef}>
-                    <RowNodes key={"constant"} />
+                    <RowNodes key="constant" />
                 </tbody>
             </table>
-        )
-    }, [])
+        ),
+        []
+    );
 };
 
 export default Nodes;

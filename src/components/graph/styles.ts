@@ -21,7 +21,7 @@ export const useStyles = makeStyles((theme) =>
                 color: "white",
                 animation: "$tdAnimation 1500ms"
             },
-            "& td.selected": {
+            "& td.wall": {
                 "&:hover": {
                     transform: "scale(1.5)"
                 },
