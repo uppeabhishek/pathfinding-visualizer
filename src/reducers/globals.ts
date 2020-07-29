@@ -9,7 +9,7 @@ import {
 
 const initialState: GlobalState = {
     algorithm: "",
-    animationSpeed: 50,
+    animationSpeed: 1,
     mazeType: "",
     vAlgorithm: false
 };

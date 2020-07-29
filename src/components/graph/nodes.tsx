@@ -9,7 +9,7 @@ import { BreathFirstSearch } from "../../PathFindingAlgorithms/BreathFirstSearch
 import { Dijkstras } from "../../PathFindingAlgorithms/Dijkstras/Dijkstras";
 import { AStar } from "../../PathFindingAlgorithms/A*/A*";
 import weight from "../../assets/weight.svg";
-import { clearBoard, clearWeights } from "../../commonUtilities";
+import { clearBoard, clearWeights, clearRoute, clearSearches } from "../../commonUtilities";
 
 const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, width }) => {
     const classes = useStyles();
@@ -181,6 +181,9 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
 
     useEffect(() => {
         const unWeightAlgorithms = new Set(["BFS"]);
+
+        clearRoute();
+        clearSearches();
 
         if (unWeightAlgorithms.has(algorithm)) {
             clearWeights();

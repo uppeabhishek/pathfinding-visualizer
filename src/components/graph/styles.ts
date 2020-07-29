@@ -25,18 +25,18 @@ export const useStyles = makeStyles((theme) =>
                 "&:hover": {
                     transform: "scale(1.5)"
                 },
-                border: "none !important",
+                border: "1px solid transparent !important",
                 backgroundColor: "grey"
             },
             "& td.searching": {
-                border: "none !important",
+                border: "1px solid transparent !important",
                 backgroundColor: "#61dafb"
             },
             "& td.route": {
                 "&:hover": {
                     transform: "scale(1.5)"
                 },
-                border: "none !important",
+                border: "1px solid transparent !important",
                 backgroundColor: "lightgreen"
             },
             "& td.source": {

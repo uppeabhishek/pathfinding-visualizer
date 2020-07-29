@@ -9,6 +9,7 @@ export class Animation {
     private animationFrameId: number;
     private readonly trNodes: HTMLCollectionOf<Element>;
     private readonly animatedNodesLength: number;
+    private animationCompleted: boolean;
 
 
     constructor(trNodes: HTMLCollectionOf<Element>, nodesToAnimate: Array<[number, number]>, className: string) {
@@ -20,6 +21,7 @@ export class Animation {
         this.trNodes = trNodes;
         this.animationFrameId = -1;
         this.animatedNodesLength = nodesToAnimate.length;
+        this.animationCompleted = false;
         
         // Bindings
         this.draw = this.draw.bind(this);
@@ -39,16 +41,24 @@ export class Animation {
         }
         if (this.index < this.animatedNodesLength) {
             this.animationFrameId = requestAnimationFrame(this.draw);
-            return;
         }
         else {
-            cancelAnimationFrame(this.animationFrameId)
+            this.animationCompleted = true;
+            cancelAnimationFrame(this.animationFrameId);
+            return;
         }
-        return;
     }
 
     animateNodes() {
-        this.animationFrameId = requestAnimationFrame(this.draw);
+        return new Promise((resolve)=>{
+            this.animationFrameId = requestAnimationFrame(this.draw);
+            const interval = setInterval(()=> {
+                if (this.animationCompleted) {
+                    clearInterval(interval);
+                    resolve("Success");
+                }
+            }, 0);
+        });
     }
 }
 

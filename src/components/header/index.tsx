@@ -20,6 +20,8 @@ const Header: FunctionComponent = () => {
 
     const algorithm = useSelector((state: RootState) => state.globals.algorithm);
 
+    const animationSpeed = useSelector((state: RootState) => state.globals.animationSpeed);
+
     const toggleGraphAlgorithmFunc = (event: ChangeEvent<{ value: unknown }>) => {
         dispatch(changeAlgorithm(event.target.value as string));
     };
@@ -120,7 +122,7 @@ const Header: FunctionComponent = () => {
                         </Typography>
                         <Slider
                             aria-labelledby="animationSpeedSliderr"
-                            defaultValue={30}
+                            defaultValue={animationSpeed}
                             getAriaValueText={getAnimationSpeed}
                             marks={true}
                             max={100}

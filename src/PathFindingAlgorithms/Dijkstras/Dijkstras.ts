@@ -1,5 +1,6 @@
 import { HeapAndMap } from "./HeapAndMap";
 import { PathFindingAlgorithm } from "..";
+import {Animation} from "../../Animation";
 
 export class Dijkstras extends PathFindingAlgorithm {
     constructor(
@@ -30,7 +31,7 @@ export class Dijkstras extends PathFindingAlgorithm {
         return neigbours;
     }
 
-    getShortestRoute() {
+    async getShortestRoute() {
         if (
             !(
                 this.source[0] <= this.rows &&
@@ -60,11 +61,15 @@ export class Dijkstras extends PathFindingAlgorithm {
 
         let resultNode;
 
+        const nodesToAnimate: Array<[number, number]> = [];
+
         while (!heapMap.isEmpty()) {
             const currentNode = heapMap.extractMin();
 
             if (currentNode) {
                 const coordinates = currentNode.getCoordinates();
+
+                nodesToAnimate.push([coordinates.x, coordinates.y]);
 
                 if (
                     coordinates.x === this.destination[0] &&
@@ -91,10 +96,19 @@ export class Dijkstras extends PathFindingAlgorithm {
             }
         }
 
+        const animation = new Animation(this.trNodes, nodesToAnimate, "searching");
+
+        await animation.animateNodes();
+
         return resultNode;
     }
 
-    plotShortestRoute() {
-        super.plotShortestRoute(this.getShortestRoute());
+    async plotShortestRoute() {
+        const res = this.getShortestRoute();
+        await res;
+
+        res.then((result)=>{
+            super.plotShortestRoute(result);
+        })
     }
 }

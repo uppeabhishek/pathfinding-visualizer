@@ -32,7 +32,7 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
         super(grid, source, destination);
     }
 
-    getShortestRoute() {
+    async getShortestRoute() {
         if (
             !(
                 this.source[0] <= this.rows &&
@@ -133,8 +133,7 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
 
         const animation = new Animation(this.trNodes, nodesToAnimate, "searching");
 
-        animation.animateNodes();
-
+        await animation.animateNodes();
 
         const pathNodes = [];
 
@@ -150,8 +149,8 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
         return false;
     }
 
-    plotShortestRoute() {
-        const res = this.getShortestRoute();
+    async plotShortestRoute() {
+        const res = await this.getShortestRoute();
 
         const nodesToAnimate: Array<[number, number]> = [];
 
@@ -159,9 +158,8 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
             res.forEach((ele) => {
                 nodesToAnimate.unshift([ele[0], ele[1]]);
             });
+            const animation = new Animation(this.trNodes, nodesToAnimate, "route");
+            animation.animateNodes();
         }
-
-        const animation = new Animation(this.trNodes, nodesToAnimate, "route");
-        animation.animateNodes();
     }
 }
