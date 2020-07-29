@@ -26,6 +26,10 @@ export const useStyles = makeStyles((theme) =>
                     transform: "scale(1.5)"
                 },
                 border: "none !important",
+                backgroundColor: "grey"
+            },
+            "& td.searching": {
+                border: "none !important",
                 backgroundColor: "#61dafb"
             },
             "& td.route": {

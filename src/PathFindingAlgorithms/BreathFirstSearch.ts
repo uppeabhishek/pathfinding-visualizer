@@ -1,5 +1,6 @@
 import { Queue } from "../DataStructures/Queue";
 import { PathFindingAlgorithm } from ".";
+import {Animation} from "../Animation";
 
 class Node {
     private readonly x: number;
@@ -65,6 +66,10 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
             array[i] = temp;
         }
 
+        const nodesToAnimate: Array<[number, number]> = [];
+
+        nodesToAnimate.push([this.source[0], this.source[1]]);
+
         const node = new Node(this.source[0], this.source[1], 0, null);
 
         const queue = new Queue();
@@ -74,6 +79,7 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
         let res;
 
         let isPathFound = false;
+
 
         while (!queue.isEmpty()) {
             const front = queue.front();
@@ -91,12 +97,16 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
             if (x - 1 > 0 && !visited[x - 1][y]) {
                 const node = new Node(x - 1, y, distance + 1, front);
 
+                nodesToAnimate.push([x-1, y]);
+
                 queue.enqueue(node);
                 visited[x - 1][y] = true;
             }
 
             if (y - 1 > 0 && !visited[x][y - 1]) {
                 const node = new Node(x, y - 1, distance + 1, front);
+
+                nodesToAnimate.push([x, y-1]);
 
                 queue.enqueue(node);
                 visited[x][y - 1] = true;
@@ -105,6 +115,8 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
             if (x + 1 < this.rows && !visited[x + 1][y]) {
                 const node = new Node(x + 1, y, distance + 1, front);
 
+                nodesToAnimate.push([x+1, y]);
+
                 queue.enqueue(node);
                 visited[x + 1][y] = true;
             }
@@ -112,10 +124,17 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
             if (y + 1 < this.cols && !visited[x][y + 1]) {
                 const node = new Node(x, y + 1, distance + 1, front);
 
+                nodesToAnimate.push([x, y+1]);
+
                 queue.enqueue(node);
                 visited[x][y + 1] = true;
             }
         }
+
+        const animation = new Animation(this.trNodes, nodesToAnimate, "searching");
+
+        animation.animateNodes();
+
 
         const pathNodes = [];
 
@@ -134,10 +153,15 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
     plotShortestRoute() {
         const res = this.getShortestRoute();
 
+        const nodesToAnimate: Array<[number, number]> = [];
+
         if (res) {
             res.forEach((ele) => {
-                this.trNodes[ele[0]].children[ele[1]].classList.add("route");
+                nodesToAnimate.unshift([ele[0], ele[1]]);
             });
         }
+
+        const animation = new Animation(this.trNodes, nodesToAnimate, "route");
+        animation.animateNodes();
     }
 }

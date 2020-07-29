@@ -1,3 +1,5 @@
+import {Animation} from "../Animation";
+
 export class PathFindingAlgorithm {
     protected readonly grid: HTMLTableSectionElement;
 
@@ -63,13 +65,17 @@ export class PathFindingAlgorithm {
     plotShortestRoute(shortestRoute: any) {
         let result = shortestRoute;
 
+        const nodesToAnimate: Array<[number, number]> = [];
+
         if (result) {
             while (result && result.getParent()) {
                 const coordinates = result.getCoordinates();
-
-                this.trNodes[coordinates.x].children[coordinates.y].classList.add("route");
+                nodesToAnimate.unshift([coordinates.x, coordinates.y]);
                 result = result.getParent();
             }
         }
+
+        const animation = new Animation(this.trNodes, nodesToAnimate, "route");
+        animation.animateNodes();
     }
 }
