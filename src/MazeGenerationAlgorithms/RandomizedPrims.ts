@@ -1,4 +1,4 @@
-import { getRandom } from "../commonUtilities";
+import { getRandom, WALL } from "../commonUtilities";
 
 export default class RandomizedPrims {
     private readonly array: HTMLTableSectionElement;
@@ -114,7 +114,7 @@ export default class RandomizedPrims {
         for (let i = 0; i < this.maxRow; i++) {
             for (let j = 0; j < this.maxCol; j++) {
                 if (res[i][j] === 1) {
-                    trNodes[i].children[j].classList.add("wall");
+                    trNodes[i].children[j].classList.add(WALL);
                 }
             }
         }

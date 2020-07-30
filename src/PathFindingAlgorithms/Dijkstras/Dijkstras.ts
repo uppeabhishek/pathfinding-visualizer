@@ -1,6 +1,7 @@
 import { HeapAndMap } from "./HeapAndMap";
 import { PathFindingAlgorithm } from "..";
-import {Animation} from "../../Animation";
+import { Animation } from "../../Animation";
+import { WALL, SEARCHING, WEIGHT } from "../../commonUtilities";
 
 export class Dijkstras extends PathFindingAlgorithm {
     constructor(
@@ -47,9 +48,9 @@ export class Dijkstras extends PathFindingAlgorithm {
 
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < this.cols; j++) {
-                if (this.trNodes[i].children[j].classList.contains("weight")) {
+                if (this.trNodes[i].children[j].classList.contains(WEIGHT)) {
                     heapMap.add(i, j, this.maxInt, null, true, true);
-                } else if (this.trNodes[i].children[j].classList.contains("wall")) {
+                } else if (this.trNodes[i].children[j].classList.contains(WALL)) {
                     heapMap.add(i, j, this.maxInt, null, true);
                 } else if (this.source[0] === i && this.source[1] === j) {
                     heapMap.add(i, j, 0, null);
@@ -96,7 +97,7 @@ export class Dijkstras extends PathFindingAlgorithm {
             }
         }
 
-        const animation = new Animation(this.trNodes, nodesToAnimate, "searching");
+        const animation = new Animation(this.trNodes, nodesToAnimate, SEARCHING);
 
         await animation.animateNodes();
 
@@ -105,10 +106,11 @@ export class Dijkstras extends PathFindingAlgorithm {
 
     async plotShortestRoute() {
         const res = this.getShortestRoute();
+
         await res;
 
-        res.then((result)=>{
+        res.then((result) => {
             super.plotShortestRoute(result);
-        })
+        });
     }
 }

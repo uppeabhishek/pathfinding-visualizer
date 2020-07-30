@@ -1,4 +1,4 @@
-import { getRandom } from "../commonUtilities";
+import { getRandom, WALL } from "../commonUtilities";
 
 export default class RecursiveBackTracker {
     private readonly array: HTMLTableSectionElement;
@@ -62,19 +62,19 @@ export default class RecursiveBackTracker {
     ) {
         if (randomNeighbour[1] > currentCell[1]) {
             if (currentCell[1] + 1 < tdLength) {
-                trNodes[currentCell[0]].children[currentCell[1] + 1].classList.add("wall");
+                trNodes[currentCell[0]].children[currentCell[1] + 1].classList.add(WALL);
             }
         } else if (randomNeighbour[0] > currentCell[0]) {
             if (currentCell[0] + 1 < trLength) {
-                trNodes[currentCell[0] + 1].children[currentCell[1]].classList.add("wall");
+                trNodes[currentCell[0] + 1].children[currentCell[1]].classList.add(WALL);
             }
         } else if (currentCell[1] > randomNeighbour[1]) {
             if (randomNeighbour[1] + 1 < tdLength) {
-                trNodes[randomNeighbour[0]].children[randomNeighbour[1] + 1].classList.add("wall");
+                trNodes[randomNeighbour[0]].children[randomNeighbour[1] + 1].classList.add(WALL);
             }
         } else if (currentCell[0] > randomNeighbour[0]) {
             if (randomNeighbour[0] + 1 < trLength) {
-                trNodes[randomNeighbour[0] + 1].children[randomNeighbour[1]].classList.add("wall");
+                trNodes[randomNeighbour[0] + 1].children[randomNeighbour[1]].classList.add(WALL);
             }
         }
     }
@@ -83,13 +83,13 @@ export default class RecursiveBackTracker {
         const min = tdLength > trLength ? trLength : tdLength;
 
         for (let i = 0; i < tdLength; i++) {
-            trNodes[0].children[i].classList.add("wall");
-            trNodes[trLength - 1].children[i].classList.add("wall");
+            trNodes[0].children[i].classList.add(WALL);
+            trNodes[trLength - 1].children[i].classList.add(WALL);
         }
 
         for (let i = 0; i < trLength; i++) {
-            trNodes[i].children[0].classList.add("wall");
-            trNodes[i].children[tdLength - 1].classList.add("wall");
+            trNodes[i].children[0].classList.add(WALL);
+            trNodes[i].children[tdLength - 1].classList.add(WALL);
         }
     }
 

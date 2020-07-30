@@ -1,4 +1,4 @@
-import { getRandom } from "../commonUtilities";
+import { getRandom, WALL } from "../commonUtilities";
 
 export default class RecursiveDivision {
     private readonly array: HTMLTableSectionElement;
@@ -117,7 +117,7 @@ export default class RecursiveDivision {
         for (let i = 0; i < this.maxRow; i++) {
             for (let j = 0; j < this.maxCol; j++) {
                 if (arr[i][j] === 1) {
-                    this.trNodes[i].children[j].classList.add("wall");
+                    this.trNodes[i].children[j].classList.add(WALL);
                 }
             }
         }

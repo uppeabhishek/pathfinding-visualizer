@@ -1,6 +1,7 @@
 import { Queue } from "../DataStructures/Queue";
 import { PathFindingAlgorithm } from ".";
-import {Animation} from "../Animation";
+import { Animation } from "../Animation";
+import { WALL, SEARCHING, ROUTE } from "../commonUtilities";
 
 class Node {
     private readonly x: number;
@@ -57,7 +58,7 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
                     obj.distance = 0;
                 }
 
-                if (this.trNodes[i].children[j].classList.contains("wall")) {
+                if (this.trNodes[i].children[j].classList.contains(WALL)) {
                     visitedTemp[j] = true;
                 }
                 temp.push(obj);
@@ -80,7 +81,6 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
 
         let isPathFound = false;
 
-
         while (!queue.isEmpty()) {
             const front = queue.front();
 
@@ -97,7 +97,7 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
             if (x - 1 > 0 && !visited[x - 1][y]) {
                 const node = new Node(x - 1, y, distance + 1, front);
 
-                nodesToAnimate.push([x-1, y]);
+                nodesToAnimate.push([x - 1, y]);
 
                 queue.enqueue(node);
                 visited[x - 1][y] = true;
@@ -106,7 +106,7 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
             if (y - 1 > 0 && !visited[x][y - 1]) {
                 const node = new Node(x, y - 1, distance + 1, front);
 
-                nodesToAnimate.push([x, y-1]);
+                nodesToAnimate.push([x, y - 1]);
 
                 queue.enqueue(node);
                 visited[x][y - 1] = true;
@@ -115,7 +115,7 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
             if (x + 1 < this.rows && !visited[x + 1][y]) {
                 const node = new Node(x + 1, y, distance + 1, front);
 
-                nodesToAnimate.push([x+1, y]);
+                nodesToAnimate.push([x + 1, y]);
 
                 queue.enqueue(node);
                 visited[x + 1][y] = true;
@@ -124,14 +124,14 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
             if (y + 1 < this.cols && !visited[x][y + 1]) {
                 const node = new Node(x, y + 1, distance + 1, front);
 
-                nodesToAnimate.push([x, y+1]);
+                nodesToAnimate.push([x, y + 1]);
 
                 queue.enqueue(node);
                 visited[x][y + 1] = true;
             }
         }
 
-        const animation = new Animation(this.trNodes, nodesToAnimate, "searching");
+        const animation = new Animation(this.trNodes, nodesToAnimate, SEARCHING);
 
         await animation.animateNodes();
 
@@ -158,7 +158,8 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
             res.forEach((ele) => {
                 nodesToAnimate.unshift([ele[0], ele[1]]);
             });
-            const animation = new Animation(this.trNodes, nodesToAnimate, "route");
+            const animation = new Animation(this.trNodes, nodesToAnimate, ROUTE);
+
             animation.animateNodes();
         }
     }

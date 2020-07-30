@@ -1,4 +1,5 @@
-import {Animation} from "../Animation";
+import { Animation } from "../Animation";
+import { ROUTE } from "../commonUtilities";
 
 export class PathFindingAlgorithm {
     protected readonly grid: HTMLTableSectionElement;
@@ -70,12 +71,14 @@ export class PathFindingAlgorithm {
         if (result) {
             while (result && result.getParent()) {
                 const coordinates = result.getCoordinates();
+
                 nodesToAnimate.unshift([coordinates.x, coordinates.y]);
                 result = result.getParent();
             }
         }
 
-        const animation = new Animation(this.trNodes, nodesToAnimate, "route");
+        const animation = new Animation(this.trNodes, nodesToAnimate, ROUTE);
+
         animation.animateNodes();
     }
 }

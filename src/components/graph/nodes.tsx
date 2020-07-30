@@ -9,13 +9,23 @@ import { BreathFirstSearch } from "../../PathFindingAlgorithms/BreathFirstSearch
 import { Dijkstras } from "../../PathFindingAlgorithms/Dijkstras/Dijkstras";
 import { AStar } from "../../PathFindingAlgorithms/A*/A*";
 import weight from "../../assets/weight.svg";
-import { clearBoard, clearWeights, clearRoute, clearSearches } from "../../commonUtilities";
+import {
+    clearBoard,
+    clearWeights,
+    clearRoute,
+    clearSearches,
+    WALL,
+    WEIGHT,
+    SOURCE,
+    DESTINATION,
+    trHeight,
+    trWidth
+} from "../../commonUtilities";
+import RandomMaze from "../../MazeGenerationAlgorithms/RandomMaze";
+import RandomWeight from "../../MazeGenerationAlgorithms/RandomWeight";
 
 const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, width }) => {
     const classes = useStyles();
-
-    let trHeight = 30;
-    let trWidth = 30;
 
     const rows = Math.floor(height / trHeight);
     const cols = Math.floor(width / trWidth);
@@ -30,14 +40,14 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
         const currentTargetClassList = e.currentTarget.classList;
         const classes = new Set(e.currentTarget.classList);
 
-        if (classes.has("source") || classes.has("destination") || classes.has("weight")) {
+        if (classes.has(SOURCE) || classes.has(DESTINATION) || classes.has(WEIGHT)) {
             return;
         }
 
-        if (classes.has("wall")) {
-            currentTargetClassList.remove("wall");
+        if (classes.has(WALL)) {
+            currentTargetClassList.remove(WALL);
         } else {
-            currentTargetClassList.add("wall");
+            currentTargetClassList.add(WALL);
         }
     }
 
@@ -65,13 +75,13 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
         const currentTargetClassList = e.currentTarget.classList;
         const classes = new Set(e.currentTarget.classList);
 
-        if (classes.has("source") || classes.has("destination")) {
+        if (classes.has(SOURCE) || classes.has(DESTINATION)) {
             return;
         }
 
         e.currentTarget.className = "";
 
-        if (!classes.has("weight")) {
+        if (!classes.has(WEIGHT)) {
             const imgElement = document.createElement("img");
 
             imgElement.setAttribute("src", weight);
@@ -80,17 +90,17 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
 
             e.currentTarget.appendChild(imgElement);
 
-            currentTargetClassList.add("weight");
+            currentTargetClassList.add(WEIGHT);
         } else {
             e.currentTarget.innerHTML = "";
-            currentTargetClassList.remove("weight");
+            currentTargetClassList.remove(WEIGHT);
         }
     }
 
     const borderRadius = 1;
 
-    trWidth -= borderRadius * 4;
-    trHeight -= borderRadius * 4;
+    const currenttrWidth = trWidth - borderRadius * 4;
+    const currenttrHeight = trHeight - borderRadius * 4;
 
     const ColNodes: FunctionComponent<{ row: number }> = ({ row }) => {
         const res = [];
@@ -104,10 +114,10 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
         for (let i = 0; i < cols; i++) {
             if (isMiddle) {
                 if (startNode === i) {
-                    className = "source";
+                    className = SOURCE;
                     text = "S";
                 } else if (endNode === i) {
-                    className = "destination";
+                    className = DESTINATION;
                     text = "D";
                 } else {
                     className = "";
@@ -120,8 +130,8 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
                     className={className}
                     data-id={`${row}-${i}`}
                     style={{
-                        width: trWidth,
-                        height: trHeight,
+                        width: currenttrWidth,
+                        height: currenttrHeight,
                         border: `${borderRadius}px solid blue`
                     }}
                     onMouseDown={onMouseDown}
@@ -175,6 +185,14 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
                 const recursiveDivision = new RecursiveDivision(bodyRef.current);
 
                 recursiveDivision.plotOnGraph();
+            } else if (mazeType === "randomMaze") {
+                const randomMaze = new RandomMaze(bodyRef.current);
+
+                randomMaze.plotOnGraph();
+            } else if (mazeType === "randomWeights") {
+                const randomWeight = new RandomWeight(bodyRef.current);
+
+                randomWeight.plotOnGraph();
             }
         }
     }, [mazeType]);

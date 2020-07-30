@@ -11,7 +11,12 @@ import {
 } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import { useStyles } from "./styles";
-import { changeAlgorithm, changeMazeType, toggleVisualizeAlgorithm } from "../../actions";
+import {
+    changeAlgorithm,
+    changeMazeType,
+    toggleVisualizeAlgorithm,
+    changeAnimationSpeed
+} from "../../actions";
 import { RootState } from "../../reducers";
 import { clearRoute, clearWeights, clearBoard, clearWalls } from "../../commonUtilities";
 
@@ -34,24 +39,35 @@ const Header: FunctionComponent = () => {
 
     const graphAlgorithms = useRef([
         {
-            name: "Breath First Search",
-            value: "BFS"
+            name: "A* (W)",
+            value: "AStar"
         },
         {
-            name: "Dijkstra's",
+            name: "Dijkstra's (W)",
             value: "Dijkstra's"
         },
         {
-            name: "A*",
-            value: "AStar"
+            name: "Breath First Search (UW)",
+            value: "BFS"
         }
     ]);
 
     const mazeGenerationAlgorithms = useRef([
         {
-            name: "Recursive Division",
-            value: "recursiveDivision"
+            name: "Random Maze",
+            value: "randomMaze"
+        },
+        {
+            name: "Random Weights",
+            value: "randomWeights"
         }
+
+        /*
+         * {
+         *     name: "Recursive Division",
+         *     value: "recursiveDivision"
+         * }
+         */
     ]);
 
     function getAnimationSpeed(value: number) {
@@ -59,6 +75,12 @@ const Header: FunctionComponent = () => {
     }
 
     const classes = useStyles();
+
+    function changeAnimationSpeedFunc(event: ChangeEvent<{}>, value: number | number[]) {
+        if (typeof value === "number") {
+            dispatch(changeAnimationSpeed(value));
+        }
+    }
 
     return (
         <div>
@@ -122,13 +144,14 @@ const Header: FunctionComponent = () => {
                         </Typography>
                         <Slider
                             aria-labelledby="animationSpeedSliderr"
-                            defaultValue={animationSpeed}
                             getAriaValueText={getAnimationSpeed}
                             marks={true}
-                            max={100}
+                            max={90}
                             min={10}
                             step={10}
-                            valueLabelDisplay="auto"
+                            value={animationSpeed}
+                            valueLabelDisplay="off"
+                            onChange={changeAnimationSpeedFunc}
                         />
                     </div>
 
