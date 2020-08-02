@@ -1,5 +1,6 @@
 import { Animation } from "../Animation";
 import { ROUTE } from "../commonUtilities";
+import { throws } from "assert";
 
 export class PathFindingAlgorithm {
     protected readonly grid: HTMLTableSectionElement;
@@ -20,10 +21,13 @@ export class PathFindingAlgorithm {
 
     protected readonly defaultWeight: number;
 
+    protected readonly animation: boolean;
+
     constructor(
         grid: HTMLTableSectionElement,
         source: [number, number],
-        destination: [number, number]
+        destination: [number, number],
+        animation: boolean
     ) {
         this.grid = grid;
         this.source = source;
@@ -34,6 +38,7 @@ export class PathFindingAlgorithm {
         this.maxInt = Number.MAX_SAFE_INTEGER;
         this.weightNode = 15;
         this.defaultWeight = 1;
+        this.animation = animation;
     }
 
     protected isValid(x: number, y: number) {
@@ -64,6 +69,7 @@ export class PathFindingAlgorithm {
     }
 
     plotShortestRoute(shortestRoute: any) {
+        console.log(this.animation);
         let result = shortestRoute;
 
         const nodesToAnimate: Array<[number, number]> = [];
@@ -77,8 +83,9 @@ export class PathFindingAlgorithm {
             }
         }
 
-        const animation = new Animation(this.trNodes, nodesToAnimate, ROUTE);
-
-        animation.animateNodes();
+        if (this.animation) {    
+            const animation = new Animation(this.trNodes, nodesToAnimate, ROUTE);
+            animation.animateNodes();
+        }
     }
 }

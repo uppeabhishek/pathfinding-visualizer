@@ -9,9 +9,10 @@ export class AStar extends PathFindingAlgorithm {
     constructor(
         grid: HTMLTableSectionElement,
         source: [number, number],
-        destination: [number, number]
+        destination: [number, number],
+        animation: boolean
     ) {
-        super(grid, source, destination);
+        super(grid, source, destination, animation);
     }
 
     private getNeighbours(q: HeapAndMap, x: number, y: number) {
@@ -128,9 +129,10 @@ export class AStar extends PathFindingAlgorithm {
             }
         }
 
-        const animation = new Animation(this.trNodes, nodesToAnimate, SEARCHING);
-
-        await animation.animateNodes();
+        if (this.animation) {
+            const animation = new Animation(this.trNodes, nodesToAnimate, SEARCHING);
+            await animation.animateNodes();
+        }
 
         return resultNode;
     }

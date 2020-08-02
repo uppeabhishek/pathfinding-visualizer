@@ -9,6 +9,7 @@ import { BreathFirstSearch } from "../../PathFindingAlgorithms/BreathFirstSearch
 import { Dijkstras } from "../../PathFindingAlgorithms/Dijkstras/Dijkstras";
 import { AStar } from "../../PathFindingAlgorithms/A*/A*";
 import weight from "../../assets/weight.svg";
+import {store} from "../../store";
 import {
     clearBoard,
     clearWeights,
@@ -29,6 +30,16 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
 
     const rows = Math.floor(height / trHeight);
     const cols = Math.floor(width / trWidth);
+
+    const keyDownFunc = useRef<(e: any) => void>();
+
+    const keyUpFunc = useRef<(e: any) => void>();
+
+    const mazeType = useSelector((state: RootState) => state.globals.mazeType);
+
+    const algorithm = useSelector((state: RootState) => state.globals.algorithm);
+
+    const vAlgorithm = useSelector((state: RootState) => state.globals.vAlgorithm);
 
     function tdRowListener(e: SyntheticEvent<HTMLTableDataCellElement>) {
         if (dict.current.wpressed) {
@@ -51,23 +62,62 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
         }
     }
 
+    function tdDragListener(e: SyntheticEvent<HTMLTableDataCellElement>) {
+        if (dragType === "source") {
+            if (e.currentTarget.classList.contains("destination") || e.currentTarget.classList.contains("wall") || e.currentTarget.classList.contains("weight")) {
+                return;
+            }
+        }
+        else if (dragType === "destination") {
+            if (e.currentTarget.classList.contains("source") || e.currentTarget.classList.contains("wall") || e.currentTarget.classList.contains("weight")) {
+                return;
+            }
+        }
+        previousNode.classList.remove(dragType);
+        e.currentTarget.classList.add(dragType);
+                
+        findShortestPath(false);
+        previousNode = e.currentTarget;
+    }
+
     let shouldMouseEnter = false;
 
+    let shouldMouseDrag = false;
+
+    let previousNode: any;
+
+    let dragType: string;
+    
     const dict = useRef({ wpressed: false });
 
     function onMouseDown(e: SyntheticEvent<HTMLTableDataCellElement>) {
-        tdRowListener(e);
-
-        shouldMouseEnter = true;
+        if (e.currentTarget.classList.contains("source")) {
+            shouldMouseDrag = true;
+            dragType="source";
+            previousNode = e.currentTarget;
+        }
+        else if (e.currentTarget.classList.contains("destination")) {
+            shouldMouseDrag = true;
+            dragType = "destination";
+            previousNode = e.currentTarget;
+        }
+        else {
+            tdRowListener(e);
+            shouldMouseEnter = true;
+        }
     }
 
     function onMouseUp() {
         shouldMouseEnter = false;
+        shouldMouseDrag = false;
     }
 
     function onMouseEnter(e: SyntheticEvent<HTMLTableDataCellElement>) {
         if (shouldMouseEnter) {
             tdRowListener(e);
+        }
+        if (shouldMouseDrag) {
+            tdDragListener(e);
         }
     }
 
@@ -109,19 +159,15 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
         const endNode = startNode * 3;
 
         let className = "";
-        let text = "";
 
         for (let i = 0; i < cols; i++) {
             if (isMiddle) {
                 if (startNode === i) {
                     className = SOURCE;
-                    text = "S";
                 } else if (endNode === i) {
                     className = DESTINATION;
-                    text = "D";
                 } else {
                     className = "";
-                    text = "";
                 }
             }
             res.push(
@@ -137,9 +183,7 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
                     onMouseDown={onMouseDown}
                     onMouseEnter={onMouseEnter}
                     onMouseUp={onMouseUp}
-                >
-                    {text}
-                </td>
+                />
             );
         }
 
@@ -159,16 +203,6 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
 
         return <>{res}</>;
     };
-
-    const keyDownFunc = useRef<(e: any) => void>();
-
-    const keyUpFunc = useRef<(e: any) => void>();
-
-    const mazeType = useSelector((state: RootState) => state.globals.mazeType);
-
-    const algorithm = useSelector((state: RootState) => state.globals.algorithm);
-
-    const vAlgorithm = useSelector((state: RootState) => state.globals.vAlgorithm);
 
     useEffect(() => {
         if (bodyRef.current) {
@@ -220,7 +254,10 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
         }
     }, [algorithm]);
 
-    useEffect(() => {
+    function findShortestPath(animation = true) {
+        
+        const algorithm = store.getState().globals.algorithm;
+
         if (bodyRef.current) {
             const documentSource = document.querySelector(".source") as HTMLElement;
             const documentDestination = document.querySelector(".destination") as HTMLElement;
@@ -243,19 +280,23 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
             }
 
             if (algorithm === "BFS") {
-                const BFS = new BreathFirstSearch(bodyRef.current, source, destination);
+                const BFS = new BreathFirstSearch(bodyRef.current, source, destination, animation);
 
                 BFS.plotShortestRoute();
             } else if (algorithm === "Dijkstra's") {
-                const Dijkstra = new Dijkstras(bodyRef.current, source, destination);
+                const Dijkstra = new Dijkstras(bodyRef.current, source, destination, animation);
 
                 Dijkstra.plotShortestRoute();
             } else if (algorithm === "AStar") {
-                const AS = new AStar(bodyRef.current, source, destination);
+                const AS = new AStar(bodyRef.current, source, destination, animation);
 
                 AS.plotShortestRoute();
             }
         }
+    }
+
+    useEffect(() => {
+        findShortestPath();
     }, [vAlgorithm]);
 
     useEffect(() => {

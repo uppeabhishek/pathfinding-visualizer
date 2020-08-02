@@ -7,9 +7,10 @@ export class Dijkstras extends PathFindingAlgorithm {
     constructor(
         grid: HTMLTableSectionElement,
         source: [number, number],
-        destination: [number, number]
+        destination: [number, number],
+        animation: boolean
     ) {
-        super(grid, source, destination);
+        super(grid, source, destination, animation);
     }
 
     private getNeighbours(q: HeapAndMap, x: number, y: number) {
