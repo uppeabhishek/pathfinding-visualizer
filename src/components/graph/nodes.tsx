@@ -1,5 +1,5 @@
 import React, { FunctionComponent, SyntheticEvent, useRef, useEffect, useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useStyles } from "./styles";
 import { RootState } from "../../reducers";
 import RecursiveBackTracker from "../../MazeGenerationAlgorithms/RecursiveBacktracker";
@@ -9,7 +9,7 @@ import { BreathFirstSearch } from "../../PathFindingAlgorithms/BreathFirstSearch
 import { Dijkstras } from "../../PathFindingAlgorithms/Dijkstras/Dijkstras";
 import { AStar } from "../../PathFindingAlgorithms/A*/A*";
 import weight from "../../assets/weight.svg";
-import {store} from "../../store";
+import { store } from "../../store";
 import {
     clearBoard,
     clearWeights,
@@ -24,6 +24,7 @@ import {
 } from "../../commonUtilities";
 import RandomMaze from "../../MazeGenerationAlgorithms/RandomMaze";
 import RandomWeight from "../../MazeGenerationAlgorithms/RandomWeight";
+import { toggleVisualizeAlgorithm } from "../../actions";
 
 const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, width }) => {
     const classes = useStyles();
@@ -41,7 +42,13 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
 
     const vAlgorithm = useSelector((state: RootState) => state.globals.vAlgorithm);
 
+    const dispatch = useDispatch();
+
     function tdRowListener(e: SyntheticEvent<HTMLTableDataCellElement>) {
+        if (store.getState().globals.vAlgorithm) {
+            return;
+        }
+
         if (dict.current.wpressed) {
             addWeight(e);
 
@@ -63,19 +70,30 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
     }
 
     function tdDragListener(e: SyntheticEvent<HTMLTableDataCellElement>) {
+        if (store.getState().globals.vAlgorithm) {
+            return;
+        }
+
         if (dragType === "source") {
-            if (e.currentTarget.classList.contains("destination") || e.currentTarget.classList.contains("wall") || e.currentTarget.classList.contains("weight")) {
+            if (
+                e.currentTarget.classList.contains("destination") ||
+                e.currentTarget.classList.contains("wall") ||
+                e.currentTarget.classList.contains("weight")
+            ) {
                 return;
             }
-        }
-        else if (dragType === "destination") {
-            if (e.currentTarget.classList.contains("source") || e.currentTarget.classList.contains("wall") || e.currentTarget.classList.contains("weight")) {
+        } else if (dragType === "destination") {
+            if (
+                e.currentTarget.classList.contains("source") ||
+                e.currentTarget.classList.contains("wall") ||
+                e.currentTarget.classList.contains("weight")
+            ) {
                 return;
             }
         }
         previousNode.classList.remove(dragType);
         e.currentTarget.classList.add(dragType);
-                
+
         findShortestPath(false);
         previousNode = e.currentTarget;
     }
@@ -87,21 +105,19 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
     let previousNode: any;
 
     let dragType: string;
-    
+
     const dict = useRef({ wpressed: false });
 
     function onMouseDown(e: SyntheticEvent<HTMLTableDataCellElement>) {
         if (e.currentTarget.classList.contains("source")) {
             shouldMouseDrag = true;
-            dragType="source";
+            dragType = "source";
             previousNode = e.currentTarget;
-        }
-        else if (e.currentTarget.classList.contains("destination")) {
+        } else if (e.currentTarget.classList.contains("destination")) {
             shouldMouseDrag = true;
             dragType = "destination";
             previousNode = e.currentTarget;
-        }
-        else {
+        } else {
             tdRowListener(e);
             shouldMouseEnter = true;
         }
@@ -122,6 +138,10 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
     }
 
     function addWeight(e: SyntheticEvent) {
+        if (store.getState().globals.vAlgorithm) {
+            return;
+        }
+
         const currentTargetClassList = e.currentTarget.classList;
         const classes = new Set(e.currentTarget.classList);
 
@@ -254,9 +274,11 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
         }
     }, [algorithm]);
 
-    function findShortestPath(animation = true) {
-        
-        const algorithm = store.getState().globals.algorithm;
+    async function findShortestPath(animation = true) {
+        clearSearches();
+        clearRoute();
+
+        const { algorithm } = store.getState().globals;
 
         if (bodyRef.current) {
             const documentSource = document.querySelector(".source") as HTMLElement;
@@ -282,21 +304,29 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
             if (algorithm === "BFS") {
                 const BFS = new BreathFirstSearch(bodyRef.current, source, destination, animation);
 
-                BFS.plotShortestRoute();
+                await BFS.plotShortestRoute().then(() => {
+                    dispatch(toggleVisualizeAlgorithm(false));
+                });
             } else if (algorithm === "Dijkstra's") {
                 const Dijkstra = new Dijkstras(bodyRef.current, source, destination, animation);
 
-                Dijkstra.plotShortestRoute();
+                await Dijkstra.plotShortestRoute().then(() => {
+                    dispatch(toggleVisualizeAlgorithm(false));
+                });
             } else if (algorithm === "AStar") {
                 const AS = new AStar(bodyRef.current, source, destination, animation);
 
-                AS.plotShortestRoute();
+                await AS.plotShortestRoute().then(() => {
+                    dispatch(toggleVisualizeAlgorithm(false));
+                });
             }
         }
     }
 
     useEffect(() => {
-        findShortestPath();
+        if (vAlgorithm) {
+            findShortestPath();
+        }
     }, [vAlgorithm]);
 
     useEffect(() => {

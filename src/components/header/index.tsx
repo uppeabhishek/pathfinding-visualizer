@@ -33,6 +33,8 @@ const Header: FunctionComponent = () => {
 
     const mazeType = useSelector((state: RootState) => state.globals.mazeType);
 
+    const vAlgorithm = useSelector((state: RootState) => state.globals.vAlgorithm);
+
     const toggleMazeGenerationAlgorithmFunc = (event: ChangeEvent<{ value: unknown }>) => {
         dispatch(changeMazeType(event.target.value as string));
     };
@@ -99,6 +101,7 @@ const Header: FunctionComponent = () => {
                             <Typography variant="h6">Algorithms</Typography>
                         </InputLabel>
                         <Select
+                            disabled={vAlgorithm}
                             id="graphAlgorithms"
                             labelId="graphAlgorithmsLabel"
                             value={algorithm}
@@ -117,6 +120,7 @@ const Header: FunctionComponent = () => {
                             <Typography variant="h6">Mazes</Typography>
                         </InputLabel>
                         <Select
+                            disabled={vAlgorithm}
                             id="mazeGenerationAlgorithms"
                             labelId="mazeGenerationAlgorithmsLabel"
                             value={mazeType}
@@ -131,19 +135,29 @@ const Header: FunctionComponent = () => {
                     </div>
 
                     <Button
+                        color="primary"
+                        disabled={vAlgorithm}
                         variant="contained"
-                        // @ts-ignore
-                        onClick={() => dispatch(toggleVisualizeAlgorithm(new Boolean(true)))}
+                        onClick={() => {
+                            if (algorithm) {
+                                dispatch(toggleVisualizeAlgorithm(true));
+                            }
+                        }}
                     >
                         Visualize
                     </Button>
 
                     <div>
-                        <Typography gutterBottom={true} id="animationSpeedSlider">
+                        <Typography
+                            color="textPrimary"
+                            gutterBottom={true}
+                            id="animationSpeedSlider"
+                        >
                             Animation Speed
                         </Typography>
                         <Slider
                             aria-labelledby="animationSpeedSliderr"
+                            disabled={vAlgorithm}
                             getAriaValueText={getAnimationSpeed}
                             marks={true}
                             max={90}
@@ -155,19 +169,39 @@ const Header: FunctionComponent = () => {
                         />
                     </div>
 
-                    <Button color="secondary" variant="contained" onClick={clearRoute}>
+                    <Button
+                        color="secondary"
+                        disabled={vAlgorithm}
+                        variant="contained"
+                        onClick={clearRoute}
+                    >
                         Clear Route
                     </Button>
 
-                    <Button color="secondary" variant="contained" onClick={clearWalls}>
+                    <Button
+                        color="secondary"
+                        disabled={vAlgorithm}
+                        variant="contained"
+                        onClick={clearWalls}
+                    >
                         Clear Walls
                     </Button>
 
-                    <Button color="secondary" variant="contained" onClick={clearWeights}>
+                    <Button
+                        color="secondary"
+                        disabled={vAlgorithm}
+                        variant="contained"
+                        onClick={clearWeights}
+                    >
                         Clear Weights
                     </Button>
 
-                    <Button color="secondary" variant="contained" onClick={clearBoard}>
+                    <Button
+                        color="secondary"
+                        disabled={vAlgorithm}
+                        variant="contained"
+                        onClick={clearBoard}
+                    >
                         Clear Board
                     </Button>
                 </Toolbar>

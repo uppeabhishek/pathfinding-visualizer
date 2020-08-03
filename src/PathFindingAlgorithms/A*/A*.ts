@@ -1,3 +1,4 @@
+import { resolve } from "dns";
 import { HeapAndMap, getManhattanDistance } from "./HeapAndMap";
 
 import { PathFindingAlgorithm } from "..";
@@ -38,9 +39,9 @@ export class AStar extends PathFindingAlgorithm {
         if (
             !(
                 this.source[0] <= this.rows &&
-                this.source[0] > 0 &&
+                this.source[0] >= 0 &&
                 this.destination[0] <= this.cols &&
-                this.destination[0] > 0
+                this.destination[0] >= 0
             )
         ) {
             return null;
@@ -131,7 +132,12 @@ export class AStar extends PathFindingAlgorithm {
 
         if (this.animation) {
             const animation = new Animation(this.trNodes, nodesToAnimate, SEARCHING);
+
             await animation.animateNodes();
+        } else {
+            nodesToAnimate.forEach((ele) => {
+                this.trNodes[ele[0]].children[ele[1]].classList.add(SEARCHING);
+            });
         }
 
         return resultNode;
@@ -140,10 +146,8 @@ export class AStar extends PathFindingAlgorithm {
     async plotShortestRoute() {
         const res = this.getShortestRoute();
 
-        await res;
-
-        res.then((result) => {
-            super.plotShortestRoute(result);
+        await res.then(async (result) => {
+            await super.plotShortestRoute(result);
         });
     }
 }

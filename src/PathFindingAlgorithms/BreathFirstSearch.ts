@@ -38,9 +38,9 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
         if (
             !(
                 this.source[0] <= this.rows &&
-                this.source[0] > 0 &&
+                this.source[0] >= 0 &&
                 this.destination[0] <= this.cols &&
-                this.destination[0] > 0
+                this.destination[0] >= 0
             )
         ) {
             return null;
@@ -132,9 +132,15 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
             }
         }
 
-        const animation = new Animation(this.trNodes, nodesToAnimate, SEARCHING);
+        if (this.animation) {
+            const animation = new Animation(this.trNodes, nodesToAnimate, SEARCHING);
 
-        await animation.animateNodes();
+            await animation.animateNodes();
+        } else {
+            nodesToAnimate.forEach((ele) => {
+                this.trNodes[ele[0]].children[ele[1]].classList.add(SEARCHING);
+            });
+        }
 
         const pathNodes = [];
 
@@ -159,9 +165,16 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
             res.forEach((ele) => {
                 nodesToAnimate.unshift([ele[0], ele[1]]);
             });
-            const animation = new Animation(this.trNodes, nodesToAnimate, ROUTE);
 
-            animation.animateNodes();
+            if (this.animation) {
+                const animation = new Animation(this.trNodes, nodesToAnimate, ROUTE);
+
+                await animation.animateNodes();
+            } else {
+                nodesToAnimate.forEach((ele) => {
+                    this.trNodes[ele[0]].children[ele[1]].classList.add(ROUTE);
+                });
+            }
         }
     }
 }

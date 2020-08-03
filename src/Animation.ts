@@ -41,10 +41,12 @@ export class Animation {
     }
 
     private performAnimation() {
-        this.trNodes[this.nodesToAnimate[this.index][0]].children[
-            this.nodesToAnimate[this.index][1]
-        ].classList.add(this.className);
-        this.index += 1;
+        if (this.nodesToAnimate.length) {
+            this.trNodes[this.nodesToAnimate[this.index][0]].children[
+                this.nodesToAnimate[this.index][1]
+            ].classList.add(this.className);
+            this.index += 1;
+        }
     }
 
     private draw(timeStamp: number) {

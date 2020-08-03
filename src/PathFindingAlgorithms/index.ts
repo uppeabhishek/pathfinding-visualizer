@@ -1,6 +1,6 @@
+import { throws } from "assert";
 import { Animation } from "../Animation";
 import { ROUTE } from "../commonUtilities";
-import { throws } from "assert";
 
 export class PathFindingAlgorithm {
     protected readonly grid: HTMLTableSectionElement;
@@ -68,8 +68,7 @@ export class PathFindingAlgorithm {
         return array;
     }
 
-    plotShortestRoute(shortestRoute: any) {
-        console.log(this.animation);
+    async plotShortestRoute(shortestRoute: any) {
         let result = shortestRoute;
 
         const nodesToAnimate: Array<[number, number]> = [];
@@ -83,9 +82,14 @@ export class PathFindingAlgorithm {
             }
         }
 
-        if (this.animation) {    
+        if (this.animation) {
             const animation = new Animation(this.trNodes, nodesToAnimate, ROUTE);
-            animation.animateNodes();
+
+            await animation.animateNodes();
+        } else {
+            nodesToAnimate.forEach((ele) => {
+                this.trNodes[ele[0]].children[ele[1]].classList.add(ROUTE);
+            });
         }
     }
 }
