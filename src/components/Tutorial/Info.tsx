@@ -50,7 +50,7 @@ const Info: FunctionComponent<{ activeStep: number }> = ({ activeStep }) => {
                 <Typography variant="h6">Choose Algorithm</Typography>
                 <br />
                 <div>
-                    There are many algorithms to find the shortest path. But I have implemented most
+                    I have implemented most
                     used algorithms in path finding as below.
                 </div>
                 <ul>
@@ -60,7 +60,7 @@ const Info: FunctionComponent<{ activeStep: number }> = ({ activeStep }) => {
                 </ul>
 
                 <div>
-                    To choose an algorithm, pick an algorithm from "Algorithms" drop down menu.
+                    To choose an algorithm, pick an algorithm from <b>Algorithms</b> drop down menu.
                 </div>
                 <div className="center-items" style={{ marginTop: 10 }}>
                     <img src={algorithmDropDown} />
@@ -78,7 +78,7 @@ const Info: FunctionComponent<{ activeStep: number }> = ({ activeStep }) => {
                 </ul>
 
                 <div>
-                    To choose a maze or pattern, pick a maze or pattern from "Mazes and Patterns"
+                    To choose a maze or pattern, pick a maze or pattern from <b>Mazes and Patterns</b>
                     drop down menu.
                 </div>
                 <div className="center-items" style={{ marginTop: 10 }}>
@@ -105,7 +105,7 @@ const Info: FunctionComponent<{ activeStep: number }> = ({ activeStep }) => {
             <div>
                 <Typography variant="h6">Visualize</Typography>
                 <br />
-                <div>Click on "Visualize" Button to visualize the algorithm.</div>
+                <div>Click on <a>Visualize</a> Button to visualize the algorithm.</div>
                 <div className="center-items" style={{ marginTop: 10 }}>
                     <img src={Download} />
                 </div>
@@ -131,7 +131,7 @@ const Info: FunctionComponent<{ activeStep: number }> = ({ activeStep }) => {
                         <b>Clear Board: </b> Clear the entire board.
                     </li>
                 </ul>
-                <Typography variant="h6">Enjoy the visualization tool</Typography>
+                <Typography variant="h6">Enjoy the visualization tool :)</Typography>
             </div>
         )
     };
