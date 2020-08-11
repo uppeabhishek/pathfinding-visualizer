@@ -1,3 +1,4 @@
+### PATHFINDING VISUALIZER
 
 <br />
 In this project I have implemented most used shortest path algorithms (weighted and unweighted) in Graph Theory which can be visualized.
@@ -13,6 +14,9 @@ Draw random mazes and random weights.
 </li>
 <li>
 Source and destination can be dragged wherever needed.
+</li>
+<li>
+Change animation speed as needed.
 </li>
 <li>
 Visualize the algorithm
