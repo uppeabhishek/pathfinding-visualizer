@@ -99,6 +99,7 @@ const Tutorial: FunctionComponent = () => {
     return (
         <div>
             <Dialog
+                fullWidth
                 aria-labelledby="customized-dialog-title"
                 disableBackdropClick={true}
                 open={open}
