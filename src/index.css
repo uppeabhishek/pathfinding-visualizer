@@ -13,3 +13,9 @@ body {
 .cursor-pointer {
     cursor: pointer;
 }
+
+.center-items {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

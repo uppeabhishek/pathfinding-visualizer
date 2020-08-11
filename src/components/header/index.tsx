@@ -117,7 +117,7 @@ const Header: FunctionComponent = () => {
 
                     <div className="mazeGenerationAlgorithms">
                         <InputLabel id="mazeGenerationAlgorithmsLabel">
-                            <Typography variant="h6">Mazes</Typography>
+                            <Typography variant="h6">Mazes and Patterns</Typography>
                         </InputLabel>
                         <Select
                             disabled={vAlgorithm}

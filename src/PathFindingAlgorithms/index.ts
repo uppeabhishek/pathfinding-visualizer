@@ -36,7 +36,7 @@ export class PathFindingAlgorithm {
         this.rows = this.trNodes.length;
         this.cols = this.trNodes[0].children.length;
         this.maxInt = Number.MAX_SAFE_INTEGER;
-        this.weightNode = 15;
+        this.weightNode = 10;
         this.defaultWeight = 1;
         this.animation = animation;
     }
