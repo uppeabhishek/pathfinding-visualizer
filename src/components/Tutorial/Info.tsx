@@ -56,7 +56,7 @@ const Info: FunctionComponent<{ activeStep: number }> = ({ activeStep }) => {
                 <ul>
                     <li>A* (Weighted)</li>
                     <li>Dijkstra's (Weighted)</li>
-                    <li>Breath First Search (Unweighted)</li>
+                    <li>Breadth First Search (Unweighted)</li>
                 </ul>
 
                 <div>

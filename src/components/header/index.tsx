@@ -49,7 +49,7 @@ const Header: FunctionComponent = () => {
             value: "Dijkstra's"
         },
         {
-            name: "Breath First Search (UW)",
+            name: "Breadth First Search (UW)",
             value: "BFS"
         }
     ]);
