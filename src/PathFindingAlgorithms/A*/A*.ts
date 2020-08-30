@@ -4,7 +4,7 @@ import { HeapAndMap, getManhattanDistance } from "./HeapAndMap";
 import { PathFindingAlgorithm } from "..";
 
 import { Animation } from "../../Animation";
-import { WALL, SEARCHING, WEIGHT } from "../../commonUtilities";
+import { WALL, SEARCHING, WEIGHT, destinationNotReachableResponse } from "../../commonUtilities";
 
 export class AStar extends PathFindingAlgorithm {
     constructor(
@@ -38,9 +38,9 @@ export class AStar extends PathFindingAlgorithm {
     async getShortestRoute() {
         if (
             !(
-                this.source[0] <= this.rows &&
+                this.source[0] < this.rows &&
                 this.source[0] >= 0 &&
-                this.destination[0] <= this.cols &&
+                this.destination[0] < this.cols &&
                 this.destination[0] >= 0
             )
         ) {
@@ -144,6 +144,10 @@ export class AStar extends PathFindingAlgorithm {
     }
 
     async plotShortestRoute() {
+        if (!this.isDestinationReachable()) {
+            destinationNotReachableResponse();
+            return;
+        }
         const res = this.getShortestRoute();
 
         await res.then(async (result) => {

@@ -5,20 +5,23 @@ import Info from "./components/Info";
 import { useStyles } from "./AppStyles";
 import Tutorial from "./components/Tutorial";
 import Information from "./components/Information";
+import "./index.css";
 
 function App(): ReactElement {
     const classes = useStyles();
 
     return (
-        <div className={classes.root}>
-            <Header />
-            <div className={classes.main}>
-                <Tutorial />
-                <Information />
-                <Info />
-                <Graph />
+        <>
+            <div className={classes.root}>
+                <Header />
+                <div className={classes.main}>
+                    <Tutorial />
+                    <Information />
+                    <Info />
+                    <Graph />
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 

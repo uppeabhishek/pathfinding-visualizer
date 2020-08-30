@@ -96,7 +96,10 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
         previousNode.classList.remove(dragType);
         e.currentTarget.classList.add(dragType);
 
-        findShortestPath(false);
+        const node = document.getElementsByClassName("route");
+        if (node.length) {
+            findShortestPath(false);
+        }
         previousNode = e.currentTarget;
     }
 

@@ -1,7 +1,13 @@
 import { Queue } from "../DataStructures/Queue";
 import { PathFindingAlgorithm } from ".";
 import { Animation } from "../Animation";
-import { WALL, SEARCHING, ROUTE } from "../commonUtilities";
+import {
+    WALL,
+    SEARCHING,
+    ROUTE,
+    clearBoard,
+    destinationNotReachableResponse
+} from "../commonUtilities";
 
 class Node {
     private readonly x: number;
@@ -95,7 +101,7 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
                 break;
             }
 
-            if (x - 1 > 0 && !visited[x - 1][y]) {
+            if (x - 1 >= 0 && !visited[x - 1][y]) {
                 const node = new Node(x - 1, y, distance + 1, front);
 
                 nodesToAnimate.push([x - 1, y]);
@@ -104,7 +110,7 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
                 visited[x - 1][y] = true;
             }
 
-            if (y - 1 > 0 && !visited[x][y - 1]) {
+            if (y - 1 >= 0 && !visited[x][y - 1]) {
                 const node = new Node(x, y - 1, distance + 1, front);
 
                 nodesToAnimate.push([x, y - 1]);
@@ -157,6 +163,11 @@ export class BreathFirstSearch extends PathFindingAlgorithm {
     }
 
     async plotShortestRoute() {
+        if (!this.isDestinationReachable()) {
+            destinationNotReachableResponse();
+            return;
+        }
+
         const res = await this.getShortestRoute();
 
         const nodesToAnimate: Array<[number, number]> = [];

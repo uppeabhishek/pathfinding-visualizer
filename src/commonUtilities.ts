@@ -60,6 +60,12 @@ export function clearWalls() {
     }
 }
 
+export function destinationNotReachableResponse() {
+    alert(
+        "Destination is not reachable from source. All Routes are blocked by walls. To get the shortest route make sure there is atleast one route reachable to destination from source."
+    );
+}
+
 export function clearSearches() {
     const tbody = document.querySelector("tbody") as HTMLTableSectionElement;
 

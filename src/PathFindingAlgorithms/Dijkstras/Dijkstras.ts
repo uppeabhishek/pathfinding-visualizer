@@ -1,7 +1,7 @@
 import { HeapAndMap } from "./HeapAndMap";
 import { PathFindingAlgorithm } from "..";
 import { Animation } from "../../Animation";
-import { WALL, SEARCHING, WEIGHT } from "../../commonUtilities";
+import { WALL, SEARCHING, WEIGHT, destinationNotReachableResponse } from "../../commonUtilities";
 
 export class Dijkstras extends PathFindingAlgorithm {
     constructor(
@@ -36,9 +36,9 @@ export class Dijkstras extends PathFindingAlgorithm {
     async getShortestRoute() {
         if (
             !(
-                this.source[0] <= this.rows &&
+                this.source[0] < this.rows &&
                 this.source[0] >= 0 &&
-                this.destination[0] <= this.cols &&
+                this.destination[0] < this.cols &&
                 this.destination[0] >= 0
             )
         ) {
@@ -112,6 +112,10 @@ export class Dijkstras extends PathFindingAlgorithm {
     }
 
     async plotShortestRoute() {
+        if (!this.isDestinationReachable()) {
+            destinationNotReachableResponse();
+            return;
+        }
         const res = this.getShortestRoute();
 
         await res;

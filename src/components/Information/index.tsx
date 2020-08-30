@@ -96,11 +96,11 @@ const Information: FunctionComponent = () => {
             <div className="center-items" style={{ padding: "10px 0" }}>
                 <div className="d-flex information-item">
                     <Box color="green" />
-                    <div className="center-items">Start Node</div>
+                    <div className="center-items">Source Node</div>
                 </div>
                 <div className="d-flex information-item">
                     <Box color="red" />
-                    <div className="center-items">End Node</div>
+                    <div className="center-items">Destination Node</div>
                 </div>
 
                 <div className="d-flex information-item">
