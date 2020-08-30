@@ -34,7 +34,7 @@ export default class RandomWeight extends MazeGeneration {
 
                 imgElement.setAttribute("src", weight);
                 imgElement.setAttribute("width", (trWidth - 5).toString());
-                imgElement.setAttribute("height", (trHeight - 5).toString());
+                imgElement.setAttribute("height", (trHeight - 8).toString());
 
                 this.grid.children[item[0]].children[item[1]].appendChild(imgElement);
             }

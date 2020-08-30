@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ChangeEvent, useRef } from "react";
+import React, { FunctionComponent, ChangeEvent, useRef, useEffect } from "react";
 import {
     Slider,
     AppBar,
@@ -126,11 +126,19 @@ const Header: FunctionComponent = () => {
                             value={mazeType}
                             onChange={toggleMazeGenerationAlgorithmFunc}
                         >
-                            {mazeGenerationAlgorithms.current.map((algo) => (
-                                <MenuItem key={algo.name} value={algo.value}>
-                                    {algo.name}
-                                </MenuItem>
-                            ))}
+                            {mazeGenerationAlgorithms.current.map((algo) => {
+                                if (
+                                    (algorithm === "" || algorithm === "BFS") &&
+                                    algo.value === "randomWeights"
+                                ) {
+                                    return;
+                                }
+                                return (
+                                    <MenuItem key={algo.name} value={algo.value}>
+                                        {algo.name}
+                                    </MenuItem>
+                                );
+                            })}
                         </Select>
                     </div>
 

@@ -49,7 +49,9 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
             return;
         }
 
-        if (dict.current.wpressed) {
+        const algorithm = store.getState().globals.algorithm;
+
+        if (dict.current.wpressed && (algorithm === "AStar" || algorithm === "Dijkstra's")) {
             addWeight(e);
 
             return;
@@ -155,8 +157,8 @@ const Nodes: FunctionComponent<{ height: number; width: number }> = ({ height, w
             const imgElement = document.createElement("img");
 
             imgElement.setAttribute("src", weight);
-            imgElement.setAttribute("width", trWidth.toString());
-            imgElement.setAttribute("height", trHeight.toString());
+            imgElement.setAttribute("width", (trWidth - 5).toString());
+            imgElement.setAttribute("height", (trHeight - 8).toString());
 
             e.currentTarget.appendChild(imgElement);
 

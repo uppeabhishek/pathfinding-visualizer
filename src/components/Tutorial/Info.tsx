@@ -49,10 +49,7 @@ const Info: FunctionComponent<{ activeStep: number }> = ({ activeStep }) => {
             <div>
                 <Typography variant="h6">Choose Algorithm</Typography>
                 <br />
-                <div>
-                    I have implemented most
-                    used algorithms in path finding as below.
-                </div>
+                <div>I have implemented most used algorithms in path finding as below.</div>
                 <ul>
                     <li>A* (Weighted)</li>
                     <li>Dijkstra's (Weighted)</li>
@@ -78,7 +75,8 @@ const Info: FunctionComponent<{ activeStep: number }> = ({ activeStep }) => {
                 </ul>
 
                 <div>
-                    To choose a maze or pattern, pick a maze or pattern from <b>Mazes and Patterns</b>
+                    To choose a maze or pattern, pick a maze or pattern from{" "}
+                    <b>Mazes and Patterns</b>
                     drop down menu.
                 </div>
                 <div className="center-items" style={{ marginTop: 10 }}>
@@ -105,7 +103,9 @@ const Info: FunctionComponent<{ activeStep: number }> = ({ activeStep }) => {
             <div>
                 <Typography variant="h6">Visualize</Typography>
                 <br />
-                <div>Click on <a>Visualize</a> Button to visualize the algorithm.</div>
+                <div>
+                    Click on <a>Visualize</a> Button to visualize the algorithm.
+                </div>
                 <div className="center-items" style={{ marginTop: 10 }}>
                     <img src={Download} />
                 </div>

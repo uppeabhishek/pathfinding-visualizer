@@ -4,6 +4,7 @@ import Graph from "./components/graph";
 import Info from "./components/Info";
 import { useStyles } from "./AppStyles";
 import Tutorial from "./components/Tutorial";
+import Information from "./components/Information";
 
 function App(): ReactElement {
     const classes = useStyles();
@@ -13,6 +14,7 @@ function App(): ReactElement {
             <Header />
             <div className={classes.main}>
                 <Tutorial />
+                <Information />
                 <Info />
                 <Graph />
             </div>
